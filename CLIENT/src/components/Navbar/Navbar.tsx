@@ -36,7 +36,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li>
-                <Link className="bg-green-500 text-white hover:bg-blue-500 px-6 py-2 rounded-full font-semibold text-center" to="/signup">
+                <Link className="bg-green-500 text-white hover:bg-blue-500 px-6 py-2 rounded-full font-semibold text-center" to="/register">
                   Signup
                 </Link>
               </li>

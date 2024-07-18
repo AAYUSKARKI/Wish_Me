@@ -4,12 +4,23 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 const app = express();
 dotenv.config({path : './.env'})
-console.log(process.env.CORS_ORIGIN);
+const allowedOrigins = ['https://wish-me-liard.vercel.app', 'http://localhost:5173','https://knowledge-bridge-rouge.vercel.app'];
 
-app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+const corsOptions = {
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Length', 'X-Foo'],
+  credentials: true, 
+};
+
+app.use(cors(corsOptions));
 app.use(express.json({limit:"16kb"}))
 app.use(express.urlencoded({extended:true,limit:"16kb"}))
 app.use(express.static("public"))

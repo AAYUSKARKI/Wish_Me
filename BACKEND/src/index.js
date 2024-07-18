@@ -7,13 +7,25 @@ import { Server } from "socket.io";
 import { User } from "./models/user.model.js"; // Import User model
 dotenv.config({ path: './.env' });
 
+const allowedOrigins = ['https://wish-me-liard.vercel.app', 'http://localhost:5173', 'https://knowledge-bridge-rouge.vercel.app'];
+
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST"],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
   },
 });
+
 
 // Maintain a map to store online users
 const onlineUsers = new Map();
