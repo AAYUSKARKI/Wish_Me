@@ -15,6 +15,10 @@ const messageschema = new Schema(
         message:{
             type:String,
             required:true
+        },
+        seen:{
+            type:Boolean,
+            default:false
         }
     },
     {

@@ -16,7 +16,9 @@ import {
     total,
     resetpassword,
     getallteachers,
-    getallstudents
+    getallstudents,
+    getAllsellercategory,
+    deleteallusers
 }
     from "../controllers/user.controllers.js";
 
@@ -66,5 +68,7 @@ router.route("/resetpassword/:token").post(resetpassword)
 router.route("/teachers").get(getallteachers)
 router.route("/students").get(getallstudents)
 router.route("/total").get(total)
+router.route("/sellercategory").get(getAllsellercategory)
+router.route("/deleteallusers").delete(deleteallusers)
 
 export default router //can be imported by any name _eg RegisterUser

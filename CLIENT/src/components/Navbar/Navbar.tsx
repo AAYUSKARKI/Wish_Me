@@ -1,26 +1,77 @@
+
+import { useSelector, useDispatch } from "react-redux";
+import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
+import { setuser } from "../Redux/Userslice";
+
 const Navbar = () => {
-    return (
-      <nav className="bg-white shadow-md">
-        <ul className="flex flex-col md:flex-row justify-center md:space-x-8 p-4">
-          <li className="text-gray-700 hover:text-blue-500 transition duration-300 transform hover:-translate-y-1">
-            <a href="#">How It Works</a>
+  const { user } = useSelector((state: any) => state.user);
+
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    Cookies.remove("accessToken");
+    dispatch(setuser(null));
+  };
+
+  return (
+    <div className="bg-blue-500 text-white shadow-md">
+      <nav className="flex items-center justify-between p-4">
+        <Link to="/" className="text-2xl font-bold cursor-pointer hover:text-3xl">WishMe</Link>
+        <ul className="flex space-x-4">
+          <li>
+            <Link to="/how-it-works">How It Works</Link>
           </li>
-          <li className="text-gray-700 hover:text-blue-500 transition duration-300 transform hover:-translate-y-1">
-            <a href="#">About</a>
+          <li>
+            <Link to="/about">About</Link>
           </li>
-          <li className="text-gray-700 hover:text-blue-500 transition duration-300 transform hover:-translate-y-1">
-            <a href="#">Service</a>
+          <li>
+            <a href="#features">Service</a>
           </li>
-          <li className="text-gray-700 hover:text-blue-500 transition duration-300 transform hover:-translate-y-1">
-            <a href="#">Login</a>
-          </li>
-          <li className="text-gray-700 hover:text-blue-500 transition duration-300 transform hover:-translate-y-1">
-            <a href="#">Signup</a>
-          </li>
+          {!user && (
+            <>
+              <li>
+                <Link className=" text-blue-500 px-6 py-2 rounded-full font-semibold tsxt-center bg-slate-200" to="/login">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link className="bg-green-500 text-white hover:bg-blue-500 px-6 py-2 rounded-full font-semibold text-center" to="/signup">
+                  Signup
+                </Link>
+              </li>
+            </>
+          )}
+          {
+            user && user.role==="seller" && (
+              <li>
+                <Link to="/dashboard/seller">Dashboard</Link>
+              </li>
+            )
+          }
+          {
+            user && user.role==="buyer" && (
+              <li>
+                <Link to="/dashboard/buyer">Dashboard</Link>
+              </li>
+            )
+          }
+          {
+            user && user.role==="admin" && (
+              <li>
+                <Link to="/dashboard/admin">Dashboard</Link>
+              </li>
+            )
+          }
+          {user && (
+            <li>
+              <button onClick={handleLogout}>Logout</button>
+            </li>
+          )}
         </ul>
       </nav>
-    );
-  };
-  
-  export default Navbar;
-  
+    </div>
+  );
+};
+
+export default Navbar;

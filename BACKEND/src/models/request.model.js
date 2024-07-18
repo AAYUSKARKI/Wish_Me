@@ -24,6 +24,9 @@ const postSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'User'
   }],
+  category: {
+    type: Array
+  },
   comments: [{
     text: String,
     createdBy: { type: Schema.Types.ObjectId, ref: 'User' },

@@ -56,7 +56,60 @@ const getmessage = asynchandler(async(req,res)=>{
     )
 })
 
+// Fetch all conversations/messages for a user
+const getConversations = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Fetch conversations where userId is either senderId or receiverId
+        const conversations = await Conversation.find({
+            participations: userId // Check if userId is in the participations array
+        })
+            .sort({ updatedAt: -1 }) // Sort by most recent message
+            .populate({
+                path: 'participations',
+                select: 'username avatar' // Populate participations with username and avatar
+            })
+            .populate({
+                path: 'messages',
+                populate: {
+                    path: 'senderId receiverId',
+                    select: 'username avatar' // Populate senderId and receiverId fields in messages
+                }
+            })
+            .exec();
+
+        res.json({ conversations });
+    } catch (error) {
+        console.error('Error fetching conversations:', error);
+        res.status(500).json({ error: 'Failed to fetch conversations' });
+    }
+};
+  
+const handleSeen = async (req, res) => {
+        try {
+            const { conversationId } = req.params;
+    
+            const conversation = await Conversation.findById(conversationId);
+            if (!conversation) return res.status(404).send({ error: 'Conversation not found' });
+    
+            await Message.updateMany(
+                { _id: { $in: conversation.messages }, receiverId: req.user._id, seen: false },
+                { $set: { seen: true } }
+            );
+    
+            res.status(200).send({ message: 'Messages marked as seen' });
+    
+            // Emit the messages seen event
+            socket.to(conversation.participations).emit('messagesSeen', { conversationId });
+        } catch (error) {
+            res.status(500).send({ error: 'Failed to mark messages as seen' });
+        }
+    };
+
 export {
     sendmessage,
-    getmessage
+    getmessage,
+    getConversations,
+    handleSeen
 }

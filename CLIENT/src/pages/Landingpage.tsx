@@ -1,4 +1,4 @@
-import Header from "../components/Header/Header"
+// import Header from "../components/Header/Header"
 import Navbar from "../components/Navbar/Navbar"
 import HeroSection from "../components/Herosection/Herosection"
 import FeaturesSection from "../components/Features/Features"
@@ -7,7 +7,7 @@ import Footer from "../components/Footer/Footer"
 function Landingpage() {
   return (
     <div className="min-h-screen bg-gray-100">
-      <Header />
+      {/* <Header /> */}
       <Navbar />
       <HeroSection />
       <FeaturesSection />

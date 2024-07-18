@@ -36,15 +36,15 @@ const registerUser = asynchandler(async (req, res) => {
     //remove password and refresh tokenfield from response
     //check for user creation 
     //return res
-    const { email, username, password,avatar,faculty,role,semester} = req.body
+    const { email, username, password,avatar,role,sellerCategory} = req.body
     console.log("email:", email);
 
-    if ([ email, username, password, avatar, faculty, role].some((field) => field?.trim() === "")) {
+    if ([ email,username,password,avatar,role].some((field) => field?.trim() === "")) {
         throw new Apierror(400, "All fields are required")
     }
 
-    if(role === "student" && !semester){
-        throw new Apierror(400, "Semester is required")
+    if(role==="seller" && !sellerCategory){
+        throw new Apierror(400, "seller category is required")
     }
 
     const existeduser = await User.findOne({
@@ -53,7 +53,12 @@ const registerUser = asynchandler(async (req, res) => {
         ]
     })
 
-    if (existeduser) { throw new Apierror(409, "User with Email or Username already exist") }
+    if (existeduser) { 
+        return res.status(400).json({
+            success: false,
+            message: 'User with this username or email already exists.'
+        });
+    }
 
     const avatarlocalpath = req.files?.avatar[0]?.path
     console.log("Avatar file received:", req.files?.avatar);
@@ -64,14 +69,18 @@ const registerUser = asynchandler(async (req, res) => {
     if (!uploadavatar) {
         throw new Apierror(400, "Avatar file not uploaded")
     }
+
+    if(role==="seller"){
+        sellerCategory = JSON.stringify(sellerCategory)
+    }
+
     const user = await User.create({
         avatar: uploadavatar.url,
         email,
-        faculty,
         role,
-        semester,
         password,
-        username: username.toLowerCase()
+        username: username.toLowerCase(),
+        sellerCategory
     })
     const createdUser = await User.findById(user._id).select(
         "-password -refreshtoken")
@@ -80,7 +89,7 @@ const registerUser = asynchandler(async (req, res) => {
         throw new Apierror(500, "something went wrong while registering a user")
     }
 
-    await sendEmail(email, "Welcome to LucidMerch", `Thanks for registering with us ${username}`)
+    await sendEmail(email, "Welcome to Wish Me", `Thanks for registering with us ${username}`)
 
     return res.status(201).json(
         new Apiresponse(200, createdUser, "User Registered sucesfully")
@@ -419,6 +428,18 @@ const total = asynchandler(async (req, res) => {
     const totalteachers = await User.countDocuments({ role: "teacher" })
     return res.status(200).json(new Apiresponse(200, { totalstudents, totalteachers }, "total fetched successfully"))
 })
+
+const getAllsellercategory = asynchandler(async (req, res) => {
+    const sellercategory = await User.distinct("sellerCategory")
+    return res.status(200).json(new Apiresponse(200, sellercategory, "seller category fetched successfully"))
+})
+
+const deleteallusers = asynchandler(async (req, res) => {
+    const users = await User.deleteMany({})
+    console.log(users)
+    return res.status(200).json(new Apiresponse(200, users, "all users deleted successfully"))
+})
+
 export {
     registerUser,
     loginuser,
@@ -436,5 +457,7 @@ export {
     resetpassword,
     getallstudents,
     getallteachers,
-    total
+    total,
+    getAllsellercategory,
+    deleteallusers
 }

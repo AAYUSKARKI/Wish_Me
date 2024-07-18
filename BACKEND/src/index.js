@@ -1,41 +1,83 @@
+// index.js
 import dotenv from "dotenv";
 import connectdb from "./db/index.js";
 import { app } from "./app.js";
 import http from "http";
 import { Server } from "socket.io";
-dotenv.config({path : './.env'})
+import { User } from "./models/user.model.js"; // Import User model
+dotenv.config({ path: './.env' });
 
 const server = http.createServer(app);
-
 const io = new Server(server, {
   cors: {
-    origin: "https://karki-chat-app.netlify.app",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
 
-io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
-  
-  socket.on('feedback', (data) => {
-    console.log(data)
-    socket.broadcast.emit('typing', data)
-  })
+// Maintain a map to store online users
+const onlineUsers = new Map();
 
-  
-  socket.on("disconnect", () => {
-    console.log("User Disconnected", socket.id);
-  })
-});
-
+// MongoDB connection
 connectdb()
-.then(()=>{
-  server.listen(process.env.PORT||5000,()=>{
-    console.log(`server is running at port: ${process.env.PORT}`)
-  })
-})
-.catch((err)=>{
-  console.log("mongodb connection failed",err);
-})
+  .then(() => {
+    console.log("MongoDB connected");
 
-export { io }
+    // Socket.IO connection handler
+    io.on("connection", async (socket) => {
+      console.log(`User Connected: ${socket.id}`);
+
+      // Handle online event
+      socket.on('online', async (userId) => {
+        try {
+          const user = await User.findById(userId);
+          if (user) {
+            onlineUsers.set(socket.id, user);
+            console.log(`User ${user.username} (${userId}) is online`);
+
+            // Update user online status and last online time
+            user.onlineStatus = true;
+            user.lastOnline = new Date();
+            await user.save();
+
+            // Broadcast updated user list to all clients
+            io.emit('userList', Array.from(onlineUsers.values()));
+          }
+        } catch (err) {
+          console.error(`Error finding user ${userId}:`, err);
+        }
+      });
+
+      // Handle disconnect event
+      socket.on("disconnect", async () => {
+        const user = onlineUsers.get(socket.id);
+        if (user) {
+          console.log(`User ${user.username} (${user._id}) disconnected`);
+
+          // Update user online status and last online time
+          user.onlineStatus = false;
+          user.lastOnline = new Date();
+          await user.save();
+
+          onlineUsers.delete(socket.id);
+
+          // Broadcast updated user list to all clients
+          io.emit('userList', Array.from(onlineUsers.values()));
+        } else {
+          console.log(`User disconnected with unknown user ID: ${socket.id}`);
+        }
+      });
+
+      // Initial user list when a new client connects
+      socket.emit('userList', Array.from(onlineUsers.values()));
+    });
+
+    server.listen(process.env.PORT || 5000, () => {
+      console.log(`Server is running at port: ${process.env.PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection failed", err);
+  });
+
+export { io };

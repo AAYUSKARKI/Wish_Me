@@ -31,17 +31,15 @@ const userschema = new Schema(
         },
         role: {
             type: String,
-            enum: ["student", "teacher"],
-            default: "student"
-        },
-        faculty: {
-            type: String,
-        },
-        semester: {
-            type: Number
+            enum: ["seller", "buyer"],
+            default: "buyer"
         },
         verifyToken: {
             type: String
+        },
+        sellerCategory: {
+            type: Array,
+            default:[]
         },
         isVerified: {
             type: Boolean,
@@ -52,7 +50,9 @@ const userschema = new Schema(
         },
         forgotPasswordExpiry: {
             type: Date
-        }
+        },
+        onlineStatus: { type: Boolean, default: false }, // Online status
+  lastOnline: { type: Date }, // Last online timestamp
     },
     {
         timestamps: true

@@ -4,10 +4,11 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js";
 import { Post } from "../models/request.model.js";
 import { Apiresponse } from "../utils/apiresponse.js";
 import { io } from "../index.js";
+import { json } from "express";
 
 const createPost = asynchandler(async (req, res) => {
     console.log(req.body)
-    const {content, createdBy } = req.body;
+    const {content, createdBy , category } = req.body;
 
     if (!content || !createdBy) {
         throw new Apierror(400, "All fields are required");
@@ -18,7 +19,9 @@ const createPost = asynchandler(async (req, res) => {
     const post = new Post({
         content,
         media: media ? media.url : null,
-        createdBy});
+        createdBy,
+        category: JSON.parse(category)
+    });
         const savedPost = await post.save();
 
     // Correct method chaining to populate createdBy
