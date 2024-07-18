@@ -32,7 +32,7 @@ function Login() {
 
         try {
             setLoading(true);
-            const res = await axios.post('http://localhost:7000/api/v1/users/login', loginData);
+            const res = await axios.post('https://wish-me-65k8.onrender.com/api/v1/users/login', loginData);
             const { accesstoken, user } = res.data.data;
 
             // Store the access token in cookies

@@ -11,6 +11,8 @@ const MessagingInterface = () => {
 
   const handleSendMessage = () => {
     // Handle sending message
+    setConversations([...conversations, { id: 3, user: 'You', message: currentMessage }]);
+    setCurrentMessage('');
   };
 
   return (

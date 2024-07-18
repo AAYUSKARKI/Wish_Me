@@ -8,7 +8,7 @@ const RequestListingPage = () => {
     datePosted: ''
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 

@@ -19,7 +19,6 @@ const PostCard: React.FC<PostCardProps> = ({
   content,
   mediaPreview,
   createdAt,
-  onlineStatus,
   Buyerid
 }) => {
   const { user } = useSelector((state: any) => state.user);

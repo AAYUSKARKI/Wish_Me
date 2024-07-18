@@ -15,6 +15,9 @@ import { setOnlineuser } from "./components/Redux/Onlineuser";
 import MyConversations from "./components/Msginterface/Myconversation";
 import HowItWorks from "./components/Howitworks/Howitworks";
 import About from "./components/About/About";
+import SellerRoute from "./Routes/sellerroute";
+import BuyerRoute from "./Routes/buyerroute";
+import PrivateRoute from "./Routes/privateroute";
 function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((state: any) => state.user);
@@ -45,13 +48,19 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
-        <Route path="/seller-dashboard" element={<SellerDashboard />} />
-        <Route path="/post-request" element={<Createrequest />} />
-        <Route path="/requests" element={<HomePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/messages" element={<MessagingInterface />} />
-        <Route path="/my-conversations" element={<MyConversations />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/requests" element={<HomePage />} />
+          <Route path="/post-request" element={<Createrequest />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/messages" element={<MessagingInterface />} />
+          <Route path="/my-conversations" element={<MyConversations />} />
+        </Route>
+        <Route element={<SellerRoute />}>
+          <Route path="/seller-dashboard" element={<SellerDashboard />} />
+        </Route>
+        <Route element={<BuyerRoute />}>
+          <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
+        </Route>
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/about" element={<About />} />
       </Routes>

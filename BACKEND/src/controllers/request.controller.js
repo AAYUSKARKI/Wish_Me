@@ -111,11 +111,35 @@ const deletePost = asynchandler(async (req, res) => {
     return res.status(200).json(new Apiresponse(200, post, "Post deleted successfully"));
 });
 
+const getMyposts = asynchandler(async (req, res) => {
+    console.log(req.user)
+    console.log(req.user._id)
+    console.log('i am here')
+    const posts = await Post.find({ createdBy: req.user._id }).populate("createdBy").sort({ createdAt: -1 });
+
+    if (!posts) {
+        throw new Apierror(404, "Posts not found");
+    }
+    return res.status(200).json(new Apiresponse(200, posts, "Posts fetched successfully"));
+});
+
+const myposts = asynchandler(async (req, res) => {
+    const posts = await Post.find({ createdBy: req.user._id }).populate("createdBy").sort({ createdAt: -1 });
+
+    if (!posts) {
+        throw new Apierror(404, "Posts not found");
+    }
+
+    return res.status(200).json(new Apiresponse(200, posts, "Posts fetched successfully"));
+
+});
 export {
     createPost,
     getPostsByCommunity,
     getPostById,
     deletePost,
     getAllPosts,
-    createPostsByCommunity
+    createPostsByCommunity,
+    getMyposts,
+    myposts
 };

@@ -29,7 +29,7 @@ const CreateRequest: React.FC = () => {
   useEffect(() => {
     const fetchSellerCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:7000/api/v1/users/sellercategory");
+        const response = await axios.get("https://wish-me-65k8.onrender.com/api/v1/users/sellercategory");
         if (response.data.success) {
           setAvailableCategories(response.data.data);
         }
@@ -107,7 +107,7 @@ const CreateRequest: React.FC = () => {
     setLoading(true);
     try {
       axios.defaults.withCredentials = true;
-      await axios.post("http://localhost:7000/api/v1/requests", formData, {
+      await axios.post("https://wish-me-65k8.onrender.com/api/v1/requests", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

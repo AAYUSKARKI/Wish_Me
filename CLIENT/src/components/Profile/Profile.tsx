@@ -1,10 +1,12 @@
 import { useState } from 'react';
-
+import { useSelector } from 'react-redux';
 const ProfilePage = () => {
+
+  const { user } = useSelector((state: any) => state.user);
   const [profile, setProfile] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    role: 'buyer',
+    username: user.username,
+    email: user.email,
+    role: user.role,
     activity: [
       { id: 1, action: 'Posted a request for a Laptop' },
       { id: 2, action: 'Received a response for a Smartphone' }
@@ -13,7 +15,7 @@ const ProfilePage = () => {
 
   const [editMode, setEditMode] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e:any) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
@@ -21,7 +23,7 @@ const ProfilePage = () => {
     setEditMode(!editMode);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     e.preventDefault();
     // Handle form submission
     setEditMode(false);
@@ -37,7 +39,7 @@ const ProfilePage = () => {
             <input
               type="text"
               name="name"
-              value={profile.name}
+              value={profile.username}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
             />
@@ -68,7 +70,8 @@ const ProfilePage = () => {
         </form>
       ) : (
         <>
-          <p><strong>Name:</strong> {profile.name}</p>
+        <img className="w-32 h-32 rounded-full mb-4 bg-gray-900" src={user.avatar} alt="" />
+          <p><strong>Name:</strong> {profile.username}</p>
           <p><strong>Email:</strong> {profile.email}</p>
           <p><strong>Role:</strong> {profile.role}</p>
           <button onClick={handleEdit} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Edit Profile</button>

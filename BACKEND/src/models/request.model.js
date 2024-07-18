@@ -8,11 +8,10 @@ const postSchema = new Schema({
   media: {
     type: String
   },
-  community: 
-  { type: Schema.Types.ObjectId, ref: 'Community'},
   createdBy: {
     type: Schema.Types.ObjectId,
-    ref: 'User', required: true
+    ref: 'User', 
+    required: true
   },
   createdAt: {
     type: Date, default: Date.now

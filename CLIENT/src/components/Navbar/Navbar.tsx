@@ -45,14 +45,14 @@ const Navbar = () => {
           {
             user && user.role==="seller" && (
               <li>
-                <Link to="/dashboard/seller">Dashboard</Link>
+                <Link to="/seller-dashboard">Dashboard</Link>
               </li>
             )
           }
           {
             user && user.role==="buyer" && (
               <li>
-                <Link to="/dashboard/buyer">Dashboard</Link>
+                <Link to="/buyer-dashboard">Dashboard</Link>
               </li>
             )
           }

@@ -4,8 +4,10 @@ import {
     getPostsByCommunity,
     createPostsByCommunity,
     getPostById,
+    getMyposts,
     deletePost,
-    getAllPosts
+    getAllPosts,
+    myposts
 } from "../controllers/request.controller.js";
 
 import {upload} from "../middleware/multer.middleware.js"
@@ -24,5 +26,9 @@ router.route("/:id")
 router.route("/community/:id")
     .post(verifyJWT,upload.single("media"), createPostsByCommunity)
     .get(verifyJWT, getPostsByCommunity);
+
+router.route("/myposts").get(verifyJWT, getMyposts);
+
+router.route("/myposts/myposts").get(verifyJWT, myposts);
 
 export default router;
