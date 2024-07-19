@@ -99,7 +99,7 @@ function Signup() {
                 formData.append("sellerCategory", JSON.stringify(user.sellerCategory));
             }
 
-            const res = await axios.post('https://wish-me-65k8.onrender.com/api/v1/users/register', formData);
+            const res = await axios.post('http://localhost:7000/api/v1/users/register', formData);
             if (res.status === 201) {
                 toast.success(res.data.message);
                 navigate("/login");

@@ -137,10 +137,12 @@ const loginuser = asynchandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: true
+        secure: true,
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        sameSite: "none",
     }
 
-    return res.status(200).cookie("accesstoken", accesstoken, options)
+    return res.status(200).cookie("accessToken", accesstoken, options)
         .cookie("refreshtoken", refreshtoken, options)
         .json(
             new Apiresponse(
