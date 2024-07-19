@@ -15,7 +15,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-blue-500 text-white shadow-md">
+    <div className="bg-blue-500 dark:bg-slate-950 text-white shadow-md">
       <nav className="flex items-center justify-between p-4">
         <Link to="/" className="text-2xl font-bold cursor-pointer hover:text-3xl">WishMe</Link>
         <ul className="flex space-x-4">

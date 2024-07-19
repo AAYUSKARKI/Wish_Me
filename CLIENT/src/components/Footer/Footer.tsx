@@ -1,6 +1,6 @@
 const Footer = () => {
     return (
-      <footer className="bg-blue-500 text-white py-10">
+      <footer className="bg-blue-500 dark:bg-gray-950 text-white py-10">
         <div className="container mx-auto text-center">
           <div className="mb-4">
             <a href="#" className="mx-2">Contact Us</a>

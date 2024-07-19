@@ -13,7 +13,7 @@ interface Request {
 
 const CreateRequest: React.FC = () => {
   const { user } = useSelector((state: any) => state.user);
-  
+
   const [request, setRequest] = useState<Request>({
     content: "",
     media: null,
@@ -128,29 +128,29 @@ const CreateRequest: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-10 left-1/2 transform -translate-x-1/2 w-3/4 p-4 border border-gray-300 rounded-xl shadow-2xl bg-gradient-to-r from-violet-500 to-fuchsia-500">
+    <div className="fixed top-10 left-1/2 transform -translate-x-1/2 w-3/4 p-4 border border-gray-300 rounded-xl shadow-2xl bg-blue-600 dark:bg-gray-950 dark:border-gray-800">
       <div className="flex justify-between items-center mb-4">
-        <IoArrowBack className="text-3xl cursor-pointer" />
-        <p className="text-3xl font-bold text-black p-2">Create Request</p>
+        <IoArrowBack className="text-3xl cursor-pointer text-gray-700 dark:text-gray-300" />
+        <p className="text-3xl font-bold text-black dark:text-white p-2">Create Request</p>
         <button
           onClick={handleSubmit}
-          className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600"
+          className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"
           disabled={loading}
         >
           Request
         </button>
       </div>
-      <div className="relative flex flex-col items-center justify-center bg-gray-300 p-4 rounded-lg">
-        <div className="flex justify-start">
+      <div className="relative flex flex-col items-center justify-center bg-blue-400 dark:bg-gray-800 p-4 rounded-lg">
+        <div className="flex justify-start w-full">
           <img
             src={user?.avatar}
             alt="Profile"
             className="w-12 h-12 rounded-full object-cover"
           />
-          <p className="text-2xl text-black p-2">{user?.username}</p>
+          <p className="text-2xl text-black dark:text-white p-2">{user?.username}</p>
         </div>
         <textarea
-          className="w-full h-32 p-2 shadow-2xl rounded-lg mb-4"
+          className="w-full h-32 p-2 shadow-2xl rounded-lg mb-4 bg-white dark:bg-gray-700 dark:text-white"
           value={request.content}
           onChange={(e) => setRequest({ ...request, content: e.target.value })}
           placeholder="What's on your mind?"
@@ -170,8 +170,8 @@ const CreateRequest: React.FC = () => {
             </button>
           </div>
         )}
-        <label className="w-full flex items-center justify-center bg-white p-2 rounded-lg shadow-2xl cursor-pointer hover:bg-gray-100">
-          <span className="text-gray-700">Upload Media</span>
+        <label className="w-full flex items-center justify-center bg-white dark:bg-gray-700 dark:text-white p-2 rounded-lg shadow-2xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
+          <span className="text-gray-700 dark:text-gray-300">Upload Media</span>
           <input
             type="file"
             className="hidden"
@@ -180,7 +180,7 @@ const CreateRequest: React.FC = () => {
           />
         </label>
         <div className="flex flex-col w-full mt-4">
-          <label className="text-gray-700" htmlFor="category">
+          <label className="text-gray-700 dark:text-gray-300" htmlFor="category">
             Enter your product Categories
           </label>
           <div className="flex items-center mt-2">
@@ -188,14 +188,14 @@ const CreateRequest: React.FC = () => {
               type="text"
               name="category"
               id="category"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
               value={categoryInput}
               onChange={handleCategoryInputChange}
               disabled={loading}
             />
             <button
               type="button"
-              className="ml-2 py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="ml-2 py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
               onClick={() => handleAddCategory(categoryInput)}
               disabled={loading || !availableCategories.includes(categoryInput.trim())}
             >
@@ -203,14 +203,14 @@ const CreateRequest: React.FC = () => {
             </button>
           </div>
           {categoryNotAvailable && (
-            <p className="text-red-500 mt-2 text-sm">{categoryInput} Category not available</p>
+            <p className="text-red-500 mt-2 text-sm dark:text-red-400">{categoryInput} Category not available</p>
           )}
           {suggestions.length > 0 && (
-            <div className="bg-white border border-gray-300 rounded-md shadow-md mt-2 w-full max-h-40 overflow-auto">
+            <div className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-md mt-2 w-full max-h-40 overflow-auto">
               {suggestions.map((suggestion, index) => (
                 <div
                   key={index}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                  className="px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
                   onClick={() => handleAddCategory(suggestion)}
                 >
                   {suggestion}
@@ -220,11 +220,11 @@ const CreateRequest: React.FC = () => {
           )}
           <div className="mt-2 flex flex-wrap gap-2">
             {request.category.map((category, index) => (
-              <div key={index} className="flex items-center bg-indigo-200 text-indigo-800 px-2 py-1 rounded-full">
+              <div key={index} className="flex items-center bg-indigo-200 dark:bg-indigo-600 text-indigo-800 dark:text-white px-2 py-1 rounded-full">
                 <span>{category}</span>
                 <button
                   type="button"
-                  className="ml-2 text-red-600"
+                  className="ml-2 text-red-600 dark:text-red-400"
                   onClick={() => handleRemoveCategory(category)}
                   disabled={loading}
                 >

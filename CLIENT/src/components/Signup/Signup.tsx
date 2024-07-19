@@ -1,4 +1,4 @@
-import Header from "../../components/Header/Header";
+
 import axios from "axios";
 import toast from "react-hot-toast";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -116,10 +116,9 @@ function Signup() {
     };
 
     return (
-        <div className="dark:bg-gray-900 dark:text-gray-100 min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-            <Header />
+        <div className="dark:bg-gray-900 dark:text-gray-100 min-h-screen flex flex-col items-center justify-center ">
             <div className="dark:bg-gray-950 dark:text-gray-100 w-full max-w-md p-8 bg-white rounded-lg shadow-lg relative">
-                <div className="dark:bg-gray-950 dark:text-gray-100 absolute top-0 left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-4 py-4 bg-white rounded-b-lg shadow-md">
+                <div className="dark:bg-gray-950 mb-5 dark:text-gray-100 absolute top-0 left-1/2 transform -translate-x-1/2 flex justify-center items-center gap-4 py-4 bg-white rounded-b-lg shadow-md">
                     <h1
                         onClick={handleSeller}
                         className={`cursor-pointer text-sm md:text-xl font-bold ${!buyer ? "text-green-500" : "text-gray-500"}`}
@@ -133,7 +132,7 @@ function Signup() {
                         Sign Up As A Buyer
                     </h1>
                 </div>
-                <h1 className="text-xl md:text-3xl md:font-bold text-gray-800 mt-12 mb-6">You are signing as a {user.role}</h1>
+                <h1 className="text-xl md:text-3xl md:font-bold text-gray-800 mt-16 mb-6">You are signing as a {user.role}</h1>
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     <div className="flex flex-col items-center">
                         <label htmlFor="avatar" className="cursor-pointer flex flex-col items-center">
@@ -226,13 +225,14 @@ function Signup() {
                         {loading ? "Loading..." : "Sign Up"}
                     </button>
                 </form>
-            </div>
-            <div className="flex items-center justify-center mt-4 bg-white dark:bg-gray-950">
+                <div className="flex items-center justify-center mt-4 bg-white dark:bg-gray-950">
                 <p className="text-gray-700 dark:text-white">Already have an account?</p>
                 <Link to="/login" className="text-indigo-600 dark:text-indigo-400 ml-1 hover:underline">
                     Log In
                 </Link>
             </div>
+            </div>
+            
         </div>
     );
 }
