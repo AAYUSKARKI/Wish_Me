@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { socket } from './components/Socket/index';
 import { setOnlineuser } from "./components/Redux/Onlineuser";
 import MyConversations from "./components/Msginterface/Myconversation";
+import Theme from "./components/Theme/Theme";
 import HowItWorks from "./components/Howitworks/Howitworks";
 import About from "./components/About/About";
 import SellerRoute from "./Routes/sellerroute";
@@ -44,6 +45,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Theme />
       <Routes>
         <Route path="/" element={<Landingpage />} />
         <Route path="/register" element={<Signup />} />

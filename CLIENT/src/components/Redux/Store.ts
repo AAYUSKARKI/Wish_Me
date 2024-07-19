@@ -1,6 +1,7 @@
 import { configureStore as ConfigureStore, combineReducers } from "@reduxjs/toolkit"
 import UserReducer from './Userslice'
 import OnlineuserReducer from "./Onlineuser";
+import ThemeReducer from './ThemeSlice'
 import {
   persistReducer,
   FLUSH,
@@ -40,6 +41,7 @@ const persistedUserReducer = persistReducer(userPersistConfig, UserReducer);
 const rootReducer = combineReducers({
   user: persistedUserReducer,
   onlineuser: OnlineuserReducer,
+  theme: ThemeReducer
 //   theme: persistedThemeReducer,
 //   products: persistedProductReducer,
 });
