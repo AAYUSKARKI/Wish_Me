@@ -32,7 +32,7 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
     try {
       setLoading(true);
       axios.defaults.withCredentials = true;
-      const res = await axios.get(`http://localhost:7000/api/v1/messages/getmessage/${Buyerid}`);
+      const res = await axios.get(`https://wish-me-65k8.onrender.com/api/v1/messages/getmessage/${Buyerid}`);
       setMessages(res.data.data);
       setLoading(false);
     } catch (error) {
@@ -94,7 +94,7 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
         message: newMessage,
       };
 
-      await axios.post('http://localhost:7000/api/v1/messages/sendmessage/'+Buyerid, messageData);
+      await axios.post('https://wish-me-65k8.onrender.com/api/v1/messages/sendmessage/'+Buyerid, messageData);
       setNewMessage('');
     } catch (error) {
       console.error(error);
