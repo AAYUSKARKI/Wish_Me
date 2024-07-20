@@ -98,7 +98,7 @@ userschema.methods.getResetPasswordToken = function () {
     return resetToken
 }
 
-userschema.methods.user.generateVerificationToken = function () {
+userschema.methods.generateVerificationToken = function () {
     const verifyToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
     this.verifyToken = verifyToken
     return verifyToken
