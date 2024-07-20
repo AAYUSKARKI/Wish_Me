@@ -45,7 +45,7 @@ function Login() {
             // Set the Axios authorization header with the bearer token
             axios.defaults.headers.common["Authorization"] = `Bearer ${accesstoken}`;
 
-            toast.success("res.data.message");
+            toast.success(res.data.message);
             if(user.role==='seller'){
             navigate('/seller-dashboard');
             }

@@ -106,6 +106,7 @@ function Signup() {
         }
 
         try {
+            setError("");
             setLoading(true);
             const formData = new FormData();
             if (avatar) formData.append("avatar", avatar);
@@ -119,9 +120,10 @@ function Signup() {
             }
 
             const res = await axios.post('https://wish-me-65k8.onrender.com/api/v1/users/register', formData);
+            console.log(res.data.data)
             if (res.status === 201) {
                 toast.success(res.data.message);
-                navigate("/verifyaccount");
+                navigate("/verify");
             } else {
                 toast.error("Failed to register. Please try again.");
             }

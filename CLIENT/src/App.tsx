@@ -60,7 +60,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/messages" element={<MessagingInterface />} />
           <Route path="/my-conversations" element={<MyConversations />} />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/resetpassword/:token" element={<ResetPassword />} />
         </Route>
         <Route element={<SellerRoute />}>

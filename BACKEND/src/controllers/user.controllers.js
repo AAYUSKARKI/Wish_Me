@@ -80,16 +80,16 @@ const registerUser = asynchandler(async (req, res) => {
         role,
         password,
         username: username.toLowerCase(),
-        sellerCategory
+        sellerCategory,
     })
+    const verifyToken = user.generateVerificationToken()
+    await user.save({ validateBeforeSave: false })
     const createdUser = await User.findById(user._id).select(
         "-password -refreshtoken")
 
     if (!createdUser) {
         throw new Apierror(500, "something went wrong while registering a user")
     }
-
-    const verifyToken = user.generateVerificationToken()
 
     const url = `https://wish-me-liard.vercel.app/verify/?verifyToken=${verifyToken}`
     const text = `Please click the link below to verify your email: ${url}`
@@ -125,6 +125,16 @@ const loginuser = asynchandler(async (req, res) => {
 
     if (!user) {
         throw new Apierror(404, "user doesnt exist")
+    }
+
+    const verifyToken = user.verifyToken
+
+    if(!user.isVerified){
+        const url = `https://wish-me-liard.vercel.app/verify/?verifyToken=${verifyToken}`
+        const text = `Please click the link below to verify your email: ${url}`
+
+        await sendEmail(email,"Verify your email",text)
+        throw new Apierror(404, "user not verified,please verify your email")
     }
 
     const isPasswordValid = await user.isPasswordCorrect(password)
@@ -238,12 +248,12 @@ const forgetpassword = asynchandler(async (req, res) => {
         throw new Apierror(404, "user not found")
     }
 
-    const resettoken = user.getPasswordResetToken()
+    const resettoken = await user.getResetPasswordToken();
     await user.save({ validateBeforeSave: false })
 
     const reseturl = `https://wish-me-liard.vercel.app/resetpassword/:${resettoken}`
 
-    const message = `
+    const text = `
     <h1>You requested for password reset</h1>
     <p>please go to this link to reset your password</p>
     <a href=${reseturl} clicktracking=off>${reseturl}</a>
@@ -251,13 +261,8 @@ const forgetpassword = asynchandler(async (req, res) => {
     or simply click on this link ${reseturl}
     `
 
-
     try {
-        await sendEmail({
-            email: user.email,
-            subject: "password recovery",
-            text: message
-        })
+        await sendEmail(email,"password recovery",text)
     } catch (error) {
         user.passwordResetToken = undefined
         user.passwordResetExpires = undefined
@@ -455,7 +460,8 @@ const deleteallusers = asynchandler(async (req, res) => {
 
 const verifyAccount = asynchandler(async (req, res) => {
     const { token } = req.params
-    const user = await User.findOne({ token })
+    console.log(token)
+    const user = await User.findOne({ verifyToken: token })
     if (!user) {
         throw new Apierror(404, "User not found")
     }

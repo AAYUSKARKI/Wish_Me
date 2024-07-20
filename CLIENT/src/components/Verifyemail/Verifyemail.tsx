@@ -11,7 +11,7 @@ function VerifyEmail() {
     useEffect(() => {
         const token = new URLSearchParams(location.search).get("verifyToken");
         if (token) {
-            axios.get(`https://wish-me-65k8.onrender.com/verifyaccount/:${token}`)
+            axios.post(`https://wish-me-65k8.onrender.com/api/v1/users/verifyaccount/${token}`)
                 .then(res => {
                     setMessage(res.data.message);
                     toast.success(res.data.message);
@@ -29,13 +29,15 @@ function VerifyEmail() {
     }, [location.search, navigate]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="min-h-screen flex flex-col items-center justify-center dark:bg-gray-950 dark:text-white p-4 shadow-2xl">
             {loading ? (
                 <p>Loading...</p>
             ) : (
 
                 <>
-                <p>CHECK YOUR EMAIL TO VERIFY YOUR ACCOUNT</p>
+                <h1>VERIFY YOUR EMAIL</h1>
+                <p>We have sent you an email with a link to verify your account.</p>
+                <p>Click on the link sent to your email to verify your account</p>
                 <p>{message}</p>
                 </>
                 
