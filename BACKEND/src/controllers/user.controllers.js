@@ -95,7 +95,7 @@ const registerUser = asynchandler(async (req, res) => {
     const text = `Please click the link below to verify your email: ${url}`
 
     await sendEmail({
-        email: user.email,
+        email,
         subject: "Verify your email",
         text
     })
