@@ -94,11 +94,7 @@ const registerUser = asynchandler(async (req, res) => {
     const url = `https://wish-me-liard.vercel.app/verify/?verifyToken=${verifyToken}`
     const text = `Please click the link below to verify your email: ${url}`
 
-    await sendEmail({
-        email,
-        subject: "Verify your email",
-        text
-    })
+    await sendEmail(email,"Verify your email",text)
 
     return res.status(201).json(
         new Apiresponse(200, createdUser, "User Registered sucesfully")
