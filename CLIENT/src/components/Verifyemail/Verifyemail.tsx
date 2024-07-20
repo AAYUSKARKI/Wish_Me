@@ -8,7 +8,6 @@ function VerifyEmail() {
     const [message, setMessage] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
-
     useEffect(() => {
         const token = new URLSearchParams(location.search).get("verifyToken");
         if (token) {
@@ -34,7 +33,12 @@ function VerifyEmail() {
             {loading ? (
                 <p>Loading...</p>
             ) : (
+
+                <>
+                <p>CHECK YOUR EMAIL TO VERIFY YOUR ACCOUNT</p>
                 <p>{message}</p>
+                </>
+                
             )}
         </div>
     );

@@ -71,6 +71,6 @@ router.route("/students").get(getallstudents)
 router.route("/total").get(total)
 router.route("/sellercategory").get(getAllsellercategory)
 router.route("/deleteallusers").delete(deleteallusers)
-router.route("/verifyaccount/:token").delete(verifyAccount)
+router.route("/verifyaccount/:token").get(verifyAccount)
 
 export default router //can be imported by any name _eg RegisterUser

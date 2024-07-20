@@ -53,7 +53,7 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/verify/:verificationToken" element={<VerifyEmail />} />
+        <Route path="/verify" element={<VerifyEmail />} />
         <Route element={<PrivateRoute />}>
           <Route path="/requests" element={<HomePage />} />
           <Route path="/post-request" element={<Createrequest />} />
