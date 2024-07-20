@@ -91,4 +91,17 @@ userschema.methods.generateRefreshToken = function () {
     )
 }
 
+userschema.methods.getResetPasswordToken = function () {
+    const resetToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    this.forgotPasswordToken = resetToken
+    this.forgotPasswordExpiry = Date.now() + 20 * 60 * 1000
+    return resetToken
+}
+
+userschema.methods.user.generateVerificationToken = function () {
+    const verifyToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    this.verifyToken = verifyToken
+    return verifyToken
+}
+
 export const User = mongoose.model("User", userschema)

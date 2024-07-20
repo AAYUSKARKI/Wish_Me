@@ -18,7 +18,8 @@ import {
     getallteachers,
     getallstudents,
     getAllsellercategory,
-    deleteallusers
+    deleteallusers,
+    verifyAccount
 }
     from "../controllers/user.controllers.js";
 
@@ -70,5 +71,6 @@ router.route("/students").get(getallstudents)
 router.route("/total").get(total)
 router.route("/sellercategory").get(getAllsellercategory)
 router.route("/deleteallusers").delete(deleteallusers)
+router.route("/verifyaccount/:token").delete(verifyAccount)
 
 export default router //can be imported by any name _eg RegisterUser

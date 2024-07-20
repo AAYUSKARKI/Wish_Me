@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setuser } from "../../components/Redux/Userslice"; // Adjust the import path as needed
 import toast from "react-hot-toast";
 import { FaUser, FaLock } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 interface LoginData {
     email: string;
@@ -94,7 +94,7 @@ function Login() {
                                     disabled={loading}
                                 />
                             </div>
-                            <p className="text-sm text-blue-600 dark:text-blue-600 mt-3 text-right">Forgot password?</p>
+                            <Link to="/forgot-password" className="text-sm text-blue-600 dark:text-blue-600 mt-3 text-right">Forgot password?</Link>
                         </div>
                     </div>
                     <button

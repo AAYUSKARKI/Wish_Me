@@ -28,6 +28,7 @@ function Signup() {
     const [loading, setLoading] = useState(false);
     const [buyer, setBuyer] = useState(false);
     const [categoryInput, setCategoryInput] = useState("");
+    const [error,setError] = useState<string>("");
 
     const handleSeller = () => {
         setBuyer(false);
@@ -81,7 +82,25 @@ function Signup() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!user.email || !user.username || !user.password ||  (!buyer && !user.sellerCategory)) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(user.email)) {
+            toast.error("Please enter a valid email address");
+            return;
+        }
+
+        const passwordregex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        if (!passwordregex.test(user.password)) {
+            toast.error("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character");
+            setError("Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character");
+            return;
+        }
+
+        if (user.password.length < 6) {
+            toast.error("Password must be at least 6 characters long");
+            return;
+        }
+
+        if (!user.email || !user.username || !user.password || (!buyer && !user.sellerCategory)) {
             toast.error("Please fill all the required fields");
             return;
         }
@@ -102,7 +121,7 @@ function Signup() {
             const res = await axios.post('https://wish-me-65k8.onrender.com/api/v1/users/register', formData);
             if (res.status === 201) {
                 toast.success(res.data.message);
-                navigate("/login");
+                navigate("/verifyaccount");
             } else {
                 toast.error("Failed to register. Please try again.");
             }
@@ -177,6 +196,7 @@ function Signup() {
                             onChange={handleChange}
                             disabled={loading}
                         />
+                        {error && <p className="text-red-500">{error}</p>}
                     </div>
                     {!buyer && (
                         <div className="flex flex-col">

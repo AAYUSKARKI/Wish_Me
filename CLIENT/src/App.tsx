@@ -19,6 +19,9 @@ import About from "./components/About/About";
 import SellerRoute from "./Routes/sellerroute";
 import BuyerRoute from "./Routes/buyerroute";
 import PrivateRoute from "./Routes/privateroute";
+import ForgotPassword from "./components/Forgotpassword/Forgotpassword";
+import ResetPassword from "./components/Resetpassword/Resetpassword";
+import VerifyEmail from "./components/Verifyemail/Verifyemail";
 function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((state: any) => state.user);
@@ -50,12 +53,15 @@ function App() {
         <Route path="/" element={<Landingpage />} />
         <Route path="/register" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/verify/:verificationToken" element={<VerifyEmail />} />
         <Route element={<PrivateRoute />}>
           <Route path="/requests" element={<HomePage />} />
           <Route path="/post-request" element={<Createrequest />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/messages" element={<MessagingInterface />} />
           <Route path="/my-conversations" element={<MyConversations />} />
+          <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route path="/resetpassword/:token" element={<ResetPassword />} />
         </Route>
         <Route element={<SellerRoute />}>
           <Route path="/seller-dashboard" element={<SellerDashboard />} />

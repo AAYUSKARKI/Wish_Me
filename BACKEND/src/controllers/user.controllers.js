@@ -89,7 +89,16 @@ const registerUser = asynchandler(async (req, res) => {
         throw new Apierror(500, "something went wrong while registering a user")
     }
 
-    await sendEmail(email, "Welcome to Wish Me", `Thanks for registering with us ${username}`)
+    const verifyToken = user.generateVerificationToken()
+
+    const url = `https://wish-me-liard.vercel.app/verify/?verifyToken=${verifyToken}`
+    const text = `Please click the link below to verify your email: ${url}`
+
+    await sendEmail({
+        email: user.email,
+        subject: "Verify your email",
+        text
+    })
 
     return res.status(201).json(
         new Apiresponse(200, createdUser, "User Registered sucesfully")
@@ -233,12 +242,18 @@ const forgetpassword = asynchandler(async (req, res) => {
         throw new Apierror(404, "user not found")
     }
 
-    const resettoken = user.createPasswordResetToken()
+    const resettoken = user.getPasswordResetToken()
     await user.save({ validateBeforeSave: false })
 
-    const reseturl = `${req.protocol}://${req.get("host")}/api/v1/user/resetpassword/${resettoken}`
+    const reseturl = `https://wish-me-liard.vercel.app/resetpassword/:${resettoken}`
 
-    const message = `your password reset token is :- \n\n ${reseturl} \n\n if you have not requested this email then please ignore it`
+    const message = `
+    <h1>You requested for password reset</h1>
+    <p>please go to this link to reset your password</p>
+    <a href=${reseturl} clicktracking=off>${reseturl}</a>
+    or copy paste this link in your browser ${reseturl}
+    or simply click on this link ${reseturl}
+    `
 
 
     try {
@@ -442,6 +457,17 @@ const deleteallusers = asynchandler(async (req, res) => {
     return res.status(200).json(new Apiresponse(200, users, "all users deleted successfully"))
 })
 
+const verifyAccount = asynchandler(async (req, res) => {
+    const { token } = req.params
+    const user = await User.findOne({ token })
+    if (!user) {
+        throw new Apierror(404, "User not found")
+    }
+    user.isVerified = true
+    user.verifyToken = undefined
+    await user.save()
+    return res.status(200).json(new Apiresponse(200, user, "Account verified successfully"))
+})
 export {
     registerUser,
     loginuser,
@@ -461,5 +487,6 @@ export {
     getallteachers,
     total,
     getAllsellercategory,
-    deleteallusers
+    deleteallusers,
+    verifyAccount
 }
