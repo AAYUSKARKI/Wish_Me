@@ -1,6 +1,5 @@
-
 import axios from "axios";
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { setuser } from "../../components/Redux/Userslice"; // Adjust the import path as needed
@@ -13,11 +12,19 @@ interface LoginData {
     password: string;
 }
 
+const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
 function Login() {
     const navigate = useNavigate();
     const [loginData, setLoginData] = useState<LoginData>({ email: "", password: "" });
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string>("");
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        setError('');
+    }, [loginData]);
+
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setLoginData({ ...loginData, [e.target.name]: e.target.value });
     };
@@ -25,8 +32,15 @@ function Login() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        if (!emailRegex.test(loginData.email)) {
+            toast.error("Please enter a valid email address");
+            setError("Please enter a valid email address");
+            return;
+        }
+
         if (!loginData.email || !loginData.password) {
             toast.error("Please fill in both fields");
+            setError("Please fill in both fields");
             return;
         }
 
@@ -37,7 +51,7 @@ function Login() {
             const { accesstoken, user } = res.data.data;
 
             // Store the access token in cookies
-            Cookies.set("accessToken", accesstoken,{ expires: 1 , secure: true , sameSite: 'None' });
+            Cookies.set("accessToken", accesstoken, { expires: 1, secure: true, sameSite: 'None' });
 
             // Dispatch setUser with user data
             dispatch(setuser(user));
@@ -46,11 +60,10 @@ function Login() {
             axios.defaults.headers.common["Authorization"] = `Bearer ${accesstoken}`;
 
             toast.success(res.data.message);
-            if(user.role==='seller'){
-            navigate('/seller-dashboard');
-            }
-            else{
-                navigate('/buyer-dashboard'); 
+            if (user.role === 'seller') {
+                navigate('/seller-dashboard');
+            } else {
+                navigate('/buyer-dashboard');
             }
         } catch (error: any) {
             toast.error(error.response?.data?.message || "Something went wrong");
@@ -96,6 +109,7 @@ function Login() {
                             </div>
                             <Link to="/forgot-password" className="text-sm text-blue-600 dark:text-blue-600 mt-3 text-right">Forgot password?</Link>
                         </div>
+                        {error && <p className="text-red-500">{error}</p>}
                     </div>
                     <button
                         type="submit"
@@ -105,9 +119,8 @@ function Login() {
                         {loading ? "Loading..." : "Login"}
                     </button>
                 </form>
-                <p className="mt-4 text-gray-600 dark:text-white">Don't have an account? <a href="/register" className="text-indigo-600 dark:text-indigo-400">Register</a></p>
+                <p className="mt-4 text-gray-600 dark:text-white">Don't have an account? <Link to="/register" className="text-indigo-600 dark:text-indigo-400">Register</Link></p>
             </div>
-            
         </div>
     );
 }

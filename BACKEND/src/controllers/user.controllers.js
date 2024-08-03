@@ -36,7 +36,8 @@ const registerUser = asynchandler(async (req, res) => {
     //remove password and refresh tokenfield from response
     //check for user creation 
     //return res
-    const { email, username, password,avatar,role,sellerCategory} = req.body
+    const { email, username, password,avatar,role} = req.body
+    let {sellerCategory} = req.body
     console.log("email:", email);
 
     if ([ email,username,password,avatar,role].some((field) => field?.trim() === "")) {

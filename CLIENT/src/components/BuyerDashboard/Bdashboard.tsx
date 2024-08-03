@@ -32,12 +32,13 @@ const BuyerDashboard = () => {
   }, []);
 
   return (
-    <div className="flex">
-      <aside className="w-1/4 bg-gray-100 p-4">
+    <div className="flex h-screen">
+      <aside className="w-1/4 bg-gray-100 p-4 dark:bg-gray-950 dark:text-white text-black">
         <ul>
           <li className="mb-2"><a href="#" className="text-blue-500">My Requests</a></li>
           <li className="mb-2"><Link to="/my-conversations">Responses</Link></li>
           <li className="mb-2"><Link to="/post-request">Post a Request</Link></li>
+          <li className="mb-2"><Link to="/notifications">Notifications</Link></li>
           <li className="mb-2"><Link to="/profile">Profile</Link></li>
           <li className="mb-2"><a href="#">Settings</a></li>
           <li className="mb-2">Logout</li>
