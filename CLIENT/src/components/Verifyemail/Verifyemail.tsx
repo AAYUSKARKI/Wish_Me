@@ -8,6 +8,7 @@ function VerifyEmail() {
     const [message, setMessage] = useState("");
     const location = useLocation();
     const navigate = useNavigate();
+
     useEffect(() => {
         const token = new URLSearchParams(location.search).get("verifyToken");
         if (token) {
@@ -29,18 +30,25 @@ function VerifyEmail() {
     }, [location.search, navigate]);
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center dark:bg-gray-950 dark:text-white p-4 shadow-2xl">
+        <div className="min-h-screen flex flex-col items-center justify-center dark:bg-gray-900 dark:text-white p-6">
             {loading ? (
-                <p>Loading...</p>
+                <div className="flex items-center space-x-2">
+                    <svg className="animate-spin h-8 w-8 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 016.293-7.708A4.978 4.978 0 0012 4a5 5 0 00-5 5c0 .55.09 1.075.262 1.564A8 8 0 014 12z"></path>
+                    </svg>
+                    <p className="text-lg font-medium">Verifying...</p>
+                </div>
             ) : (
-
-                <>
-                <h1>VERIFY YOUR EMAIL</h1>
-                <p>We have sent you an email with a link to verify your account.</p>
-                <p>Click on the link sent to your email to verify your account</p>
-                <p>{message}</p>
-                </>
-                
+                <div className="text-center max-w-lg w-full p-4 bg-white shadow-md rounded-lg dark:bg-gray-800">
+                    <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Email Verification</h1>
+                    <p className="text-lg mb-4 text-gray-700 dark:text-gray-300">
+                        {message || "Please check your email and follow the instructions to verify your account."}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                        If you did not receive an email, check your spam folder or <a href="/resend-verification" className="text-blue-500 hover:underline">request a new one</a>.
+                    </p>
+                </div>
             )}
         </div>
     );

@@ -102,6 +102,28 @@ const registerUser = asynchandler(async (req, res) => {
     )
 })
 
+const resendVerificationmail = asynchandler(async(req,res)=>{
+    const {email} = req.body;
+
+    const emailExists = await User.findOne({email});
+
+    if(!emailExists){
+        throw new Apierror(400, "Email doesnot exists!try registering with this mail first")
+    }
+
+    const verifyToken = emailExists.generateVerificationToken()
+    await emailExists.save({ validateBeforeSave: false })
+
+    const url = `https://wish-me-liard.vercel.app/verify/?verifyToken=${verifyToken}`
+    const text = `Please click the link below to verify your email: ${url}`
+
+    await sendEmail(email,"Verify your email",text)
+
+    return res.status(201).json(
+        new Apiresponse(200, emailExists, "Verification mail sent successfully!check your mail")
+    )
+})
+
 const loginuser = asynchandler(async (req, res) => {
     // Log the req.body object to inspect the data being sent from the client
     // console.log('Request Body:', req.body);
@@ -252,7 +274,7 @@ const forgetpassword = asynchandler(async (req, res) => {
     const resettoken = await user.getResetPasswordToken();
     await user.save({ validateBeforeSave: false })
 
-    const reseturl = `https://wish-me-liard.vercel.app/resetpassword/:${resettoken}`
+    const reseturl = `https://wish-me-liard.vercel.app/resetpassword/${resettoken}`
 
     const text = `
     <h1>You requested for password reset</h1>
@@ -491,5 +513,6 @@ export {
     total,
     getAllsellercategory,
     deleteallusers,
-    verifyAccount
+    verifyAccount,
+    resendVerificationmail
 }

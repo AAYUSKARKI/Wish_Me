@@ -19,7 +19,8 @@ import {
     getallstudents,
     getAllsellercategory,
     deleteallusers,
-    verifyAccount
+    verifyAccount,
+    resendVerificationmail
 }
     from "../controllers/user.controllers.js";
 
@@ -56,6 +57,7 @@ router.route("/login").post(loginuser)
 
 //seruce routes
 router.route("/logout").post(logoutuser)
+router.route("/resend-verification").post(resendVerificationmail)
 router.route("/refreshtoken").post(refreshaccesstoken)
 router.route("/changepassword").post(changecurrentpassword)
 router.route("/currentuser").get(getcurrentuser)

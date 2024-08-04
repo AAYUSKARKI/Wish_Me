@@ -1,0 +1,90 @@
+/* Cookieinfo.css */
+.cookie-card {
+    position: fixed; /* Fix position at the bottom */
+    bottom: 0; /* Align to the bottom */
+    left: 0; /* Align to the left */
+    width: 100%; /* Full width */
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 10px 10px 0 0; /* Rounded corners at the top */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, .1);
+    z-index: 1000; /* Ensure it appears above other elements */
+    opacity: 0; /* Initially invisible */
+    transition: opacity 0.5s ease-in-out, bottom 0.5s ease-in-out; /* Smooth transition */
+  }
+  
+  .cookie-card.show {
+    opacity: 1; /* Show when the class is added */
+    bottom: 20px; /* Adjust bottom space for smooth appearance */
+  }
+  
+  .title {
+    font-weight: 600;
+    color: rgb(31 41 55);
+    text-align: center;
+  }
+  
+  .description {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: rgb(75 85 99);
+    text-align: center;
+  }
+  
+  .description a {
+    --tw-text-opacity: 1;
+    color: rgb(59 130 246);
+  }
+  
+  .description a:hover {
+    text-decoration-line: underline;
+  }
+  
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+  
+  .pref, .accept {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    border-radius: 0.5rem;
+    padding: 0.625rem 1rem;
+    border: none;
+    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .pref {
+    color: rgb(31 41 55);
+    background-color: transparent;
+    text-decoration-line: underline;
+  }
+  
+  .pref:hover {
+    color: rgb(156 163 175);
+  }
+  
+  .pref:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  
+  .accept {
+    background-color: rgb(17 24 39);
+    font-weight: 500;
+    color: #fff;
+  }
+  
+  .accept:hover {
+    background-color: rgb(55 65 81);
+  }
+  
+  .accept:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  
