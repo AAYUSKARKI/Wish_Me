@@ -18,11 +18,12 @@ import Loader from "./components/Loader/Loader";
 import Cookieinfo from './components/Cookieinfo/Cookieinfo'; // Import the Cookieinfo component
 import TermsOfService from "./pages/Termsofservice";
 import PrivacyPolicy from "./pages/Privacypolicy";
+import Responses from "./components/Msginterface/Responses";
 
 // Lazy load components
 const VerifyEmail = lazy(() => import('./components/Verifyemail/Verifyemail'));
 const ForgotPassword = lazy(() => import('./components/Forgotpassword/Forgotpassword'));
-const MyConversations =lazy(()=> import("./components/Msginterface/Myconversation"));
+// const MyConversations =lazy(()=> import("./components/Msginterface/Myconversation"));
 const ResetPassword = lazy(() => import('./components/Resetpassword/Resetpassword'));
 const HowItWorks = lazy(() => import('./components/Howitworks/Howitworks'));
 const About = lazy(() => import('./components/About/About'));
@@ -70,6 +71,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Landingpage />} />
           <Route path="/register" element={<Signup />} />
+          <Route path="/responses" element={<Responses />} />
           <Route path="/login" element={<Login />} />
           <Route path="/verify" element={<VerifyEmail />} />
           <Route path="/resend-verification" element={<ResendVerification />} />
@@ -81,7 +83,7 @@ function App() {
             <Route path="/post-request" element={<Createrequest />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/messages" element={<MessagingInterface />} />
-            <Route path="/my-conversations" element={<MyConversations />} />
+            <Route path="/my-conversations" element={<Responses />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/resetpassword/:token" element={<ResetPassword />} />
           </Route>

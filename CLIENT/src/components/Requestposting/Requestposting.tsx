@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useState, useEffect, ChangeEvent } from "react";
-import { IoArrowBack } from "react-icons/io5";
+// import { IoArrowBack } from "react-icons/io5";
+import Sidebar from "../Sidebar/Sidebar";
 import toast from "react-hot-toast"; // Assuming you are using react-hot-toast for notifications
 
 interface Request {
@@ -128,10 +129,12 @@ const CreateRequest: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-10 left-1/2 transform -translate-x-1/2 w-3/4 p-4 border border-gray-300 rounded-xl shadow-2xl bg-blue-600 dark:bg-gray-950 dark:border-gray-800">
+    <div className="flex h-screen dark:bg-gray-950">
+      <Sidebar/>
+    <div className="overflow-scroll ml-3 w-3/4 p-4 border border-gray-300 rounded-xl shadow-2xl bg-blue-600 dark:bg-gray-950 dark:border-gray-800">
       <div className="flex justify-between items-center mb-4">
-        <IoArrowBack className="text-3xl cursor-pointer text-gray-700 dark:text-gray-300" />
-        <p className="text-3xl font-bold text-black dark:text-white p-2">Create Request</p>
+        {/* <IoArrowBack className="text-3xl cursor-pointer text-gray-700 dark:text-gray-300" /> */}
+        <p className="text-3xl font-bold text-black dark:text-white p-2">Create Request For Products</p>
         <button
           onClick={handleSubmit}
           className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"
@@ -150,10 +153,10 @@ const CreateRequest: React.FC = () => {
           <p className="text-2xl text-black dark:text-white p-2">{user?.username}</p>
         </div>
         <textarea
-          className="w-full h-32 p-2 shadow-2xl rounded-lg mb-4 bg-white dark:bg-gray-700 dark:text-white"
+          className="w-full h-[200px] p-2 shadow-2xl rounded-lg mb-4 bg-white dark:bg-gray-700 dark:text-white"
           value={request.content}
           onChange={(e) => setRequest({ ...request, content: e.target.value })}
-          placeholder="What's on your mind?"
+          placeholder="What do you want?"
         ></textarea>
         {request.mediaPreview && (
           <div className="relative w-full mb-4">
@@ -235,6 +238,7 @@ const CreateRequest: React.FC = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

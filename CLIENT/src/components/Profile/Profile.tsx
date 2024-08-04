@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import Sidebar from '../Sidebar/Sidebar';
 const ProfilePage = () => {
 
   const { user } = useSelector((state: any) => state.user);
@@ -30,8 +31,10 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Profile</h2>
+    <div className='flex'>
+      <Sidebar/>
+    <div className="w-450px md:w-[890px] mx-auto p-6 bg-slate-50 rounded-2xl shadow-3xl">
+      <h2 className="text-2xl font-bold mb-4 text-center">Profile</h2>
       {editMode ? (
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -83,6 +86,7 @@ const ProfilePage = () => {
           </ul>
         </>
       )}
+    </div>
     </div>
   );
 };
