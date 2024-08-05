@@ -101,6 +101,10 @@ connectdb()
     console.log(userId);
     const socketId = userIdToSocketId.get(userId); // Get socketId from reverse map
     console.log(socketId);
+    const senderSocketId = userIdToSocketId.get(senderId);
+    if (senderSocketId) {
+      io.to(senderSocketId).emit(event, message);
+    }
     if (socketId) {
       io.to(socketId).emit(event, message);
       const sender = await User.findById(senderId);
