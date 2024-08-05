@@ -18,16 +18,15 @@ interface Conversation {
   messages: Message[];
 }
 
-const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: string, Buyerid: string, closeChat: () => void }> = ({ popup, Buyerid, closeChat, creatorName, creatorAvatar }) => {
+const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: string, Buyerid: string, closeChat: () => void }> = ({ popup, Buyerid, closeChat, creatorName, creatorAvatar }) => {
   const { user } = useSelector((state: any) => state.user);
   const [messages, setMessages] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const {onlineuser} = useSelector((state: any) => state.onlineuser);
-//   console.log(onlineuser,'is the online user');
-  const isOnline = onlineuser.some((user:any)=>user._id === Buyerid);
-//   console.log(isOnline,'is online')
+  const { onlineuser } = useSelector((state: any) => state.onlineuser);
+  const isOnline = onlineuser.some((user: any) => user._id === Buyerid);
+
   const getMessages = async () => {
     try {
       setLoading(true);
@@ -47,7 +46,6 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
     }
 
     const handleMessage = (data: Message) => {
-      // Check if the message involves the selected person
       if (data.senderId === Buyerid || data.receiverId === Buyerid) {
         setMessages((prev) => {
           if (!prev) {
@@ -56,13 +54,11 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
               messages: [data],
             };
           }
-  
-          // Check if the message is already in the state
+
           if (prev.messages.some((msg) => msg._id === data._id)) {
             return prev;
           }
-  
-          // If prev is defined and message is not in state, update messages array
+
           return {
             ...prev,
             messages: [...prev.messages, data],
@@ -90,6 +86,19 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
   const handleSendMessage = async () => {
     if (newMessage.trim() === '') return;
 
+    setMessages((prev) => {
+      if (!prev) {
+        return {
+          participants: [user._id, Buyerid],
+          messages: [{ _id: Math.random().toString(36).substring(2,5), senderId: user._id, receiverId: Buyerid, message: newMessage, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }],
+        };
+      }
+      return {
+        ...prev,
+        messages: [...prev.messages, { _id: 'temp', senderId: user._id, receiverId: Buyerid, message: newMessage, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }],
+      };
+    });
+
     try {
       const messageData = {
         senderId: user._id,
@@ -97,20 +106,13 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
         message: newMessage,
       };
 
-      const res = await axios.post('https://wish-me-65k8.onrender.com/api/v1/messages/sendmessage/'+Buyerid, messageData);
+      await axios.post('https://wish-me-65k8.onrender.com/api/v1/messages/sendmessage/' + Buyerid, messageData);
       setNewMessage('');
-      // Update the messages state immediately to reflect the new message
-      setMessages((prev) => {
-        if (!prev) {
-          return {
-            participants: [user._id, Buyerid],
-            messages: [res.data.data],
-          };
-        }
-        return {
-          ...prev,
-          messages: [...prev.messages, res.data.data],
-        };
+
+      // Send notification
+      await axios.post('https://wish-me-65k8.onrender.com/sendNotification', {
+        title: 'New Message',
+        message: newMessage,
       });
     } catch (error) {
       console.error(error);
@@ -118,33 +120,29 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
   };
 
   if (loading) return <h1>Loading...</h1>;
-//   if (!messages || messages.messages.length === 0) return <h1>You have no messages, start a conversation.</h1>;
 
   return (
     <div className={`w-full h-full flex items-center justify-center ${popup ? 'block' : 'hidden'}`}>
-      <div className=" w-full max-w-md bg-white dark:bg-gray-950 rounded-lg shadow-lg">
-        {/* Chat Header */}
+      <div className="w-full max-w-md bg-white dark:bg-gray-950 rounded-lg shadow-lg">
         <div className="flex items-center justify-between p-4 border-b dark:border-gray-800">
-        <div className="flex items-center mb-4">
-        {/* Avatar */}
-        <div className="relative">
-          <div
-            className={`absolute -top-3 -right-3 h-2 w-2 ${isOnline ? 'bg-green-500' : 'bg-red-500'} text-white text-xs px-2 py-1 rounded-full`}
-          ></div>
-          <img
-            src={creatorAvatar}
-            alt="Avatar"
-            className="w-12 h-12 rounded-full object-cover mr-2"
-          />
-        </div>
-        <span className="text-lg font-semibold text-white">{creatorName}</span>
-        </div>
+          <div className="flex items-center mb-4">
+            <div className="relative">
+              <div
+                className={`absolute -top-3 -right-3 h-2 w-2 ${isOnline ? 'bg-green-500' : 'bg-red-500'} text-white text-xs px-2 py-1 rounded-full`}
+              ></div>
+              <img
+                src={creatorAvatar}
+                alt="Avatar"
+                className="w-12 h-12 rounded-full object-cover mr-2"
+              />
+            </div>
+            <span className="text-lg font-semibold text-white">{creatorName}</span>
+          </div>
           <button onClick={closeChat}>
             <IoClose className="text-2xl text-white" />
           </button>
         </div>
 
-        {/* Chat Messages */}
         <div ref={chatContainerRef} className="h-96 overflow-y-auto p-4">
           {messages?.messages.map((message: Message) => (
             <div key={message._id} className={`my-2 flex ${message.senderId === user._id ? 'justify-end' : 'justify-start'}`}>
@@ -170,7 +168,6 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
           ))}
         </div>
 
-        {/* Message Input */}
         <div className="flex items-center p-4 border-t dark:border-gray-800">
           <input
             type="text"
