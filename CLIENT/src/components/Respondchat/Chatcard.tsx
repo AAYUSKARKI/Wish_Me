@@ -116,10 +116,10 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
                 className="w-12 h-12 rounded-full object-cover mr-2"
               />
             </div>
-            <span className="text-lg font-semibold text-white">{creatorName}</span>
+            <span className="text-lg font-semibold text-black dark:text-white">{creatorName}</span>
           </div>
           <button onClick={closeChat}>
-            <IoClose className="text-2xl text-white" />
+            <IoClose className="text-2xl text-white dark:text-white" />
           </button>
         </div>
 
