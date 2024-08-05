@@ -34,7 +34,7 @@ async function subscribeUser(swRegistration: ServiceWorkerRegistration) {
     applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
   });
 
-  await fetch('/subscribe', {
+  await fetch('https://wish-me-65k8.onrender.com/subscribe', {
     method: 'POST',
     body: JSON.stringify(subscription),
     headers: {

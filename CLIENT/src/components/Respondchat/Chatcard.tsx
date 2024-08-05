@@ -46,7 +46,7 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
     }
 
     const handleMessage = (data: Message) => {
-      if (data.senderId === Buyerid || data.receiverId === Buyerid) {
+      console.log('i am runiinggggggg')
         setMessages((prev) => {
           if (!prev) {
             return {
@@ -54,17 +54,11 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
               messages: [data],
             };
           }
-
-          if (prev.messages.some((msg) => msg._id === data._id)) {
-            return prev;
-          }
-
           return {
             ...prev,
             messages: [...prev.messages, data],
           };
         });
-      }
     };
 
     socket.on('newmessage', handleMessage);
@@ -85,20 +79,6 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
 
   const handleSendMessage = async () => {
     if (newMessage.trim() === '') return;
-
-    setMessages((prev) => {
-      if (!prev) {
-        return {
-          participants: [user._id, Buyerid],
-          messages: [{ _id: Math.random().toString(36).substring(2,5), senderId: user._id, receiverId: Buyerid, message: newMessage, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }],
-        };
-      }
-      return {
-        ...prev,
-        messages: [...prev.messages, { _id: 'temp', senderId: user._id, receiverId: Buyerid, message: newMessage, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }],
-      };
-    });
-
     try {
       const messageData = {
         senderId: user._id,
