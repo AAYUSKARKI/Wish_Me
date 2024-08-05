@@ -2,6 +2,7 @@ import express, { urlencoded } from "express";
 import cors from 'cors';
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import webPush from 'web-push'
 const app = express();
 dotenv.config({path : './.env'})
 const allowedOrigins = ['https://wish-me-liard.vercel.app', 'http://localhost:5173','https://knowledge-bridge-rouge.vercel.app'];
@@ -34,4 +35,38 @@ import requestRouter from './routes/request.routes.js'
 app.use("/api/v1/users",userRouter)
 app.use("/api/v1/messages",messageRouter)
 app.use("/api/v1/requests",requestRouter)
+
+const vapidKeys = {
+  publicKey: process.env.publicKey,
+  privateKey: process.env.privateKey,
+};
+
+webPush.setVapidDetails(
+  'mailto:karki.aayush2003@icloud.com',
+  vapidKeys.publicKey,
+  vapidKeys.privateKey
+);
+
+let subscriptions = []; // Store subscriptions
+
+app.post('/subscribe', (req, res) => {
+  const subscription = req.body;
+  subscriptions.push(subscription);
+  res.status(201).json({});
+});
+
+app.post('/sendNotification', (req, res) => {
+  const { title, message } = req.body;
+
+  const payload = JSON.stringify({ title, message });
+
+  Promise.all(subscriptions.map(sub =>
+    webPush.sendNotification(sub, payload)
+  ))
+    .then(() => res.status(200).json({ message: 'Notification sent' }))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to send notification' });
+    });
+});
 export { app }

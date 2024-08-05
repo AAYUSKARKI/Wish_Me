@@ -19,7 +19,7 @@ import Cookieinfo from './components/Cookieinfo/Cookieinfo'; // Import the Cooki
 import TermsOfService from "./pages/Termsofservice";
 import PrivacyPolicy from "./pages/Privacypolicy";
 import Responses from "./components/Msginterface/Responses";
-
+import NotificationList from "./pages/Notifications";
 // Lazy load components
 const VerifyEmail = lazy(() => import('./components/Verifyemail/Verifyemail'));
 const ForgotPassword = lazy(() => import('./components/Forgotpassword/Forgotpassword'));
@@ -82,6 +82,7 @@ function App() {
             <Route path="/requests" element={<HomePage />} />
             <Route path="/post-request" element={<Createrequest />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/notifications" element={<NotificationList/>}/> 
             <Route path="/messages" element={<MessagingInterface />} />
             <Route path="/my-conversations" element={<Responses />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

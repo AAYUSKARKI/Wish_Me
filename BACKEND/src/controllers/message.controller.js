@@ -3,6 +3,7 @@ import { Apiresponse } from "../utils/apiresponse.js";
 import { Message } from "../models/message.model.js";
 import { io } from "../index.js";
 import { Conversation } from "../models/conversation.model.js";
+import { sendMessageToUser } from "../index.js";
 
 const sendmessage = asynchandler(async(req,res)=>{
     const senderId = req.user._id;
@@ -30,8 +31,11 @@ const sendmessage = asynchandler(async(req,res)=>{
         message
     })
 
-    io.emit('newmessage',newmessage)
+    // io.emit('newmessage',newmessage)
     console.log('new message is ',newmessage)
+
+      // Emit the message to the specific user
+  sendMessageToUser(receiverId, 'newmessage', newmessage,senderId);
     if (newmessage) {
         getConversation.messages = getConversation.messages || []; 
         getConversation.messages.push(newmessage._id);

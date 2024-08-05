@@ -32,7 +32,7 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
     try {
       setLoading(true);
       axios.defaults.withCredentials = true;
-      const res = await axios.get(`https://wish-me-65k8.onrender.com/api/v1/messages/getmessage/${Buyerid}`);
+      const res = await axios.get(`http://localhost:7000/api/v1/messages/getmessage/${Buyerid}`);
       setMessages(res.data.data);
       setLoading(false);
     } catch (error) {
@@ -47,26 +47,29 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
     }
 
     const handleMessage = (data: Message) => {
-        // Check if the message involves the selected person
-        if (data.senderId === Buyerid || data.receiverId === Buyerid) {
-            setMessages((prev) => {
-                // If prev is null or undefined, return initial state
-                if (!prev) {
-                    return {
-                        participants: [data.senderId, data.receiverId],
-                        messages: [data],
-                    };
-                }
-    
-                // If prev is defined, update messages array
-                return {
-                    ...prev,
-                    messages: [...prev.messages, data],
-                };
-            });
-        }
+      // Check if the message involves the selected person
+      if (data.senderId === Buyerid || data.receiverId === Buyerid) {
+        setMessages((prev) => {
+          if (!prev) {
+            return {
+              participants: [data.senderId, data.receiverId],
+              messages: [data],
+            };
+          }
+  
+          // Check if the message is already in the state
+          if (prev.messages.some((msg) => msg._id === data._id)) {
+            return prev;
+          }
+  
+          // If prev is defined and message is not in state, update messages array
+          return {
+            ...prev,
+            messages: [...prev.messages, data],
+          };
+        });
+      }
     };
-    
 
     socket.on('newmessage', handleMessage);
 
@@ -94,8 +97,21 @@ const Chatcard: React.FC<{ popup: boolean,creatorName: string,creatorAvatar: str
         message: newMessage,
       };
 
-      await axios.post('https://wish-me-65k8.onrender.com/api/v1/messages/sendmessage/'+Buyerid, messageData);
+      const res = await axios.post('http://localhost:7000/api/v1/messages/sendmessage/'+Buyerid, messageData);
       setNewMessage('');
+      // Update the messages state immediately to reflect the new message
+      setMessages((prev) => {
+        if (!prev) {
+          return {
+            participants: [user._id, Buyerid],
+            messages: [res.data.data],
+          };
+        }
+        return {
+          ...prev,
+          messages: [...prev.messages, res.data.data],
+        };
+      });
     } catch (error) {
       console.error(error);
     }
