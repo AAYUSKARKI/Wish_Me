@@ -9,10 +9,10 @@ import {User} from "../models/user.model.js"
 
 export const verifyJWT = asynchandler(async(req,res,next)=>{
  try {
-   console.log(req.cookies)
+   // console.log(req.cookies)
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer", "")
-   console.log(token,'from frontend')
-   console.log(process.env.ACCESS_TOKEN_SECRET)
+   // console.log(token,'from frontend')
+   // console.log(process.env.ACCESS_TOKEN_SECRET)
     if(!token){
        throw new Apierror(401,"unathorized token")
     }

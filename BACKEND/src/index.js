@@ -6,6 +6,7 @@ import http from "http";
 import { Server } from "socket.io";
 import { User } from "./models/user.model.js"; // Import User model
 import { Notification } from "./models/notification.model.js";
+import mongoose from "mongoose";
 dotenv.config({ path: './.env' });
 
 const allowedOrigins = ['https://wish-me-liard.vercel.app', 'http://localhost:5173', 'https://knowledge-bridge-rouge.vercel.app'];
@@ -41,13 +42,15 @@ connectdb()
     
       // Handle online event
       socket.on('online', async (userId) => {
+        console.log(userId,'is user id')
         try {
           const user = await User.findById(userId);
           if (user) {
             onlineUsers.set(socket.id, user);
             userIdToSocketId.set(userId, socket.id); // Store reverse mapping
             console.log(`User ${user.username} (${userId}) is online`);
-    
+            console.log(`Mapped user ${user.username} (${userId}) to socket ID ${socket.id}`);
+          
             // Update user online status and last online time
             user.onlineStatus = true;
             user.lastOnline = new Date();
@@ -55,10 +58,12 @@ connectdb()
     
             // Broadcast updated user list to all clients
             io.emit('userList', Array.from(onlineUsers.values()));
+            console.log('Current userIdToSocketId map after online event:', Array.from(userIdToSocketId.entries()));
           }
         } catch (err) {
           console.error(`Error finding user ${userId}:`, err);
         }
+        
       });
     
       // Handle disconnect event
@@ -95,36 +100,49 @@ connectdb()
     console.error("MongoDB connection failed", err);
   });
 
-  const sendMessageToUser = async(userId, event, message,senderId) => {
-    console.log(senderId)
-    console.log('user to socket  is', userIdToSocketId);
-    console.log(userId);
-    const socketId = userIdToSocketId.get(userId); // Get socketId from reverse map
-    console.log(socketId);
-    const senderSocketId = userIdToSocketId.get(senderId);
+  const sendMessageToUser = async (userId, event, message, senderId) => {
+    console.log('Sending message to users:');
+    console.log('Current userIdToSocketId map:', Array.from(userIdToSocketId.entries()));
+  
+    // Convert ObjectId to string if necessary
+    const senderIdString = senderId instanceof mongoose.Types.ObjectId ? senderId.toString() : senderId;
+    const receiverIdString = userId instanceof mongoose.Types.ObjectId ? userId.toString() : userId;
+  
+    console.log('Sender ID:', senderIdString);
+    console.log('Receiver ID:', receiverIdString);
+  
+    const senderSocketId = userIdToSocketId.get(senderIdString);
+    const receiverSocketId = userIdToSocketId.get(receiverIdString);
+  
+    console.log('Sender Socket ID:', senderSocketId);
+    console.log('Receiver Socket ID:', receiverSocketId);
+  
     if (senderSocketId) {
       io.to(senderSocketId).emit(event, message);
+    } else {
+      console.log(`Sender with ID ${senderIdString} is not connected or not found in map.`);
     }
-    if (socketId) {
-      io.to(socketId).emit(event, message);
-      const sender = await User.findById(senderId);
+  
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit(event, message);
+      const sender = await User.findById(senderIdString);
       const notification = await Notification.create({
-        userId: userId, // User receiving the message
-        senderId: senderId, // User sending the message
-        message: `New message from ${sender.username}`, // Customize the message
+        userId: receiverIdString,
+        senderId: senderIdString,
+        message: `New message from ${sender.username}`,
       });
-    
-      
-      // Notify the user via Socket.IO
-      io.to(socketId).emit('notification', {
+  
+      io.to(receiverSocketId).emit('notification', {
         sendername: sender.username,
         message: `New message from ${sender.username}`,
         avatar: sender.avatar,
-        timestamp: notification.createdAt
+        timestamp: notification.createdAt,
       });
     } else {
-      console.log(`User with ID ${userId} is not connected`);
+      console.log(`Receiver with ID ${receiverIdString} is not connected or not found in map.`);
     }
   };
+  
+  
   
 export { io , sendMessageToUser};

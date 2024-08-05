@@ -36,7 +36,7 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      console.error("Error fetching messages:", error);
     }
   };
 
@@ -46,19 +46,19 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
     }
 
     const handleMessage = (data: Message) => {
-      console.log('i am runiinggggggg')
-        setMessages((prev) => {
-          if (!prev) {
-            return {
-              participants: [data.senderId, data.receiverId],
-              messages: [data],
-            };
-          }
+      console.log('New message received:', data);
+      setMessages((prev) => {
+        if (!prev) {
           return {
-            ...prev,
-            messages: [...prev.messages, data],
+            participants: [data.senderId, data.receiverId],
+            messages: [data],
           };
-        });
+        }
+        return {
+          ...prev,
+          messages: [...prev.messages, data],
+        };
+      });
     };
 
     socket.on('newmessage', handleMessage);
@@ -86,7 +86,7 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
         message: newMessage,
       };
 
-      await axios.post('https://wish-me-65k8.onrender.com/api/v1/messages/sendmessage/' + Buyerid, messageData);
+      await axios.post(`https://wish-me-65k8.onrender.com/api/v1/messages/sendmessage/${Buyerid}`, messageData);
       setNewMessage('');
 
       // Send notification
@@ -95,7 +95,7 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
         message: newMessage,
       });
     } catch (error) {
-      console.error(error);
+      console.error("Error sending message:", error);
     }
   };
 

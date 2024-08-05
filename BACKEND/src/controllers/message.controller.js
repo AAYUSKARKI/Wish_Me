@@ -7,11 +7,11 @@ import { sendMessageToUser } from "../index.js";
 
 const sendmessage = asynchandler(async(req,res)=>{
     const senderId = req.user._id;
-    console.log(senderId,'is the sender id')
-    console.log('req.user is',req.user)
+    // console.log(senderId,'is the sender id')
+    // console.log('req.user is',req.user)
     const receiverId = req.params.id;
-    console.log('req.params is ',req.params)
-    console.log(receiverId,'is the receiver id')
+    // console.log('req.params is ',req.params)
+    // console.log(receiverId,'is the receiver id')
     const {message} = req.body;
     console.log(message)
     let getConversation = await Conversation.findOne({
@@ -32,7 +32,7 @@ const sendmessage = asynchandler(async(req,res)=>{
     })
 
     // io.emit('newmessage',newmessage)
-    console.log('new message is ',newmessage)
+    // console.log('new message is ',newmessage)
 
       // Emit the message to the specific user
   sendMessageToUser(receiverId, 'newmessage', newmessage,senderId);
