@@ -23,7 +23,7 @@ const BuyerDashboard = () => {
     const getPosts = async () => {
       axios.defaults.withCredentials = true;
       await axios
-        .get("http://localhost:7000/api/v1/requests/myposts/myposts")
+        .get("https://wish-me-65k8.onrender.com/api/v1/requests/myposts/myposts")
         .then((response) => {
           setPosts(response.data.data);
         });

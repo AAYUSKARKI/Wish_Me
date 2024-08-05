@@ -12,7 +12,7 @@ function VerifyEmail() {
     useEffect(() => {
         const token = new URLSearchParams(location.search).get("verifyToken");
         if (token) {
-            axios.post(`http://localhost:7000/api/v1/users/verifyaccount/${token}`)
+            axios.post(`https://wish-me-65k8.onrender.com/api/v1/users/verifyaccount/${token}`)
                 .then(res => {
                     setMessage(res.data.message);
                     toast.success(res.data.message);
