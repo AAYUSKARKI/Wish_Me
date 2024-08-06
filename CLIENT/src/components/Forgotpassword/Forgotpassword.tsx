@@ -10,7 +10,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       axios.defaults.withCredentials=true
-      const response = await axios.post('http://localhost:7000/api/v1/users/forgetpassword', { email });
+      const response = await axios.post('https://wish-me-65k8.onrender.com/api/v1/users/forgetpassword', { email });
       setMessage(response.data.message);
     } catch (error) {
       setMessage('Error sending email. Please try again.');

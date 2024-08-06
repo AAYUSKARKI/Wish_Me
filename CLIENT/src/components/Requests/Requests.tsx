@@ -38,7 +38,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const getPosts = async () => {
       await axios
-        .get("http://localhost:7000/api/v1/requests")
+        .get("https://wish-me-65k8.onrender.com/api/v1/requests")
         .then((response) => {
           setPosts(response.data.data);
         });

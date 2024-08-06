@@ -32,7 +32,7 @@ const MyConversations: React.FC = () => {
     const fetchConversations = async () => {
       try {
         axios.defaults.withCredentials = true;
-        const res = await axios.get(`http://localhost:7000/api/v1/messages/myconvo`);
+        const res = await axios.get(`https://wish-me-65k8.onrender.com/api/v1/messages/myconvo`);
         setConversations(res.data.conversations);
       } catch (error) {
         console.error('Error fetching conversations:', error);
