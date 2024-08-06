@@ -23,7 +23,7 @@ const BuyerDashboard = () => {
     const getPosts = async () => {
       axios.defaults.withCredentials = true;
       await axios
-        .get("https://wish-me-65k8.onrender.com/api/v1/requests/myposts/myposts")
+        .get("http://localhost:7000/api/v1/requests/myposts/myposts")
         .then((response) => {
           setPosts(response.data.data);
         });
@@ -32,10 +32,10 @@ const BuyerDashboard = () => {
   }, []);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen dark:bg-slate-950">
       <Sidebar/>
       <main className="w-3/4 p-4">
-        <h2 className="text-2xl font-bold mb-4">Current Requests</h2>
+        <h2 className="text-2xl font-bold mb-4 dark:text-white">My Requests</h2>
         <div className="p-4">
       {posts && posts.length > 0 ? (
         posts.map((post) => (

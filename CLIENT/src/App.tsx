@@ -20,6 +20,7 @@ import TermsOfService from "./pages/Termsofservice";
 import PrivacyPolicy from "./pages/Privacypolicy";
 import Responses from "./components/Msginterface/Responses";
 import NotificationList from "./pages/Notifications";
+import Setting from "./components/Setings/Setting";
 // Lazy load components
 const VerifyEmail = lazy(() => import('./components/Verifyemail/Verifyemail'));
 const ForgotPassword = lazy(() => import('./components/Forgotpassword/Forgotpassword'));
@@ -60,6 +61,75 @@ function App() {
     }, 1500); // Reduced duration
   }, []);
 
+  const publicVapidKey = 'BO1rb4A3Ho2Ct0lPLIhxfeVZO38SiAgE1PQvvhYbWts6lA3W02q7-6bJCy36t6xfNpT9OEQ1pxQvvqfLgLWJLsM'; // Replace with your public VAPID key
+
+// Check for service worker support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', async () => {
+    try {
+      const swRegistration = await navigator.serviceWorker.register('/service-worker.js');
+
+      console.log('Service Worker registered:', swRegistration);
+
+      // Subscribe the user
+      const subscription = await subscribeUser(swRegistration);
+
+      console.log('User subscribed:', subscription);
+    } catch (error) {
+      console.error('Service Worker registration or subscription failed:', error);
+    }
+  });
+}
+
+async function subscribeUser(swRegistration: ServiceWorkerRegistration) {
+  const subscription = await swRegistration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+  });
+
+  await fetch('http://localhost:7000/subscribe', {
+    method: 'POST',
+    body: JSON.stringify(subscription),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  return subscription;
+}
+
+function urlBase64ToUint8Array(base64String: string): Uint8Array {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+
+  return outputArray;
+}
+
+// Request notification permission
+async function requestNotificationPermission() {
+  if ('Notification' in window) {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+    } else {
+      console.error('Notification permission denied.');
+    }
+  } else {
+    console.error('Notification API not supported.');
+  }
+}
+
+// Call this function when your app initializes
+requestNotificationPermission();
+
   if (loading) {
     return <Loader />;
   }
@@ -73,6 +143,7 @@ function App() {
           <Route path="/register" element={<Signup />} />
           <Route path="/responses" element={<Responses />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/settings" element={<Setting />} />
           <Route path="/verify" element={<VerifyEmail />} />
           <Route path="/resend-verification" element={<ResendVerification />} />
           <Route path="/termsofservice" element={<TermsOfService />} />
@@ -93,6 +164,7 @@ function App() {
           </Route>
           <Route element={<BuyerRoute />}>
             <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
+            <Route path="/my-requests" element={<BuyerDashboard />} />
           </Route>
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/about" element={<About />} />

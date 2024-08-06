@@ -17,7 +17,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post(`https://wish-me-65k8.onrender.com/resetpassword/${token}`, { password });
+      const response = await axios.post(`http://localhost:7000/resetpassword/${token}`, { password });
       setMessage(response.data.message);
     } catch (error) {
       setMessage('Error resetting password. Please try again.');

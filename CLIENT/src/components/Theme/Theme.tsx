@@ -27,7 +27,7 @@ function Theme() {
     };
 
     return (
-        <div className="z-10 absolute m-5 top-1/2 text-black right-0 transform -translate-y-1/2 dark:text-white flex items-center justify-center">
+        <div className="z-10 absolute m-5 top-1/2 text-gray-950 right-0 transform -translate-y-1/2 dark:text-orange-500 flex items-center justify-center">
              <button className="p-2 cursor-pointer text-3xl" onClick={() => {
                 console.log('Button onClick called');
                 darkModeHandler();

@@ -30,7 +30,7 @@ const CreateRequest: React.FC = () => {
   useEffect(() => {
     const fetchSellerCategories = async () => {
       try {
-        const response = await axios.get("https://wish-me-65k8.onrender.com/api/v1/users/sellercategory");
+        const response = await axios.get("http://localhost:7000/api/v1/users/sellercategory");
         if (response.data.success) {
           setAvailableCategories(response.data.data);
         }
@@ -108,7 +108,7 @@ const CreateRequest: React.FC = () => {
     setLoading(true);
     try {
       axios.defaults.withCredentials = true;
-      await axios.post("https://wish-me-65k8.onrender.com/api/v1/requests", formData, {
+      await axios.post("http://localhost:7000/api/v1/requests", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -134,7 +134,7 @@ const CreateRequest: React.FC = () => {
     <div className="overflow-scroll ml-3 w-3/4 p-4 border border-gray-300 rounded-xl shadow-2xl bg-blue-600 dark:bg-gray-950 dark:border-gray-800">
       <div className="flex justify-between items-center mb-4">
         {/* <IoArrowBack className="text-3xl cursor-pointer text-gray-700 dark:text-gray-300" /> */}
-        <p className="text-3xl font-bold text-black dark:text-white p-2">Create Request For Products</p>
+        <p className="text-sm lg:text-5xl md:text-3xl font-bold text-black dark:text-white p-2">Create Request For Products</p>
         <button
           onClick={handleSubmit}
           className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"

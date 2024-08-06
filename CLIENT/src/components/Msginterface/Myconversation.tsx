@@ -32,7 +32,7 @@ const MyConversations: React.FC = () => {
     const fetchConversations = async () => {
       try {
         axios.defaults.withCredentials = true;
-        const res = await axios.get(`https://wish-me-65k8.onrender.com/api/v1/messages/myconvo`);
+        const res = await axios.get(`http://localhost:7000/api/v1/messages/myconvo`);
         setConversations(res.data.conversations);
       } catch (error) {
         console.error('Error fetching conversations:', error);
@@ -53,7 +53,7 @@ const MyConversations: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto">
+    <div className="dark:bg-gray-950 dark:text-white container mx-auto overflow-y-scroll">
       <h1 className="text-2xl font-semibold mt-8 mb-4">My Conversations</h1>
       <div className="grid gap-4">
         {conversations.map((conversation) => {
@@ -64,7 +64,7 @@ const MyConversations: React.FC = () => {
           const isOnline = onlineuser.some((onlineUser: any) => onlineUser._id === otherParticipant?._id);
 
           return (
-            <div key={conversation._id} className="bg-white p-4 shadow rounded-lg flex items-center justify-between">
+            <div key={conversation._id} className="bg-white dark:bg-slate-900 dark:text-white p-4 shadow rounded-lg flex items-center justify-between">
               {/* Participant Info */}
               {otherParticipant && (
                 <div className="flex items-center cursor-pointer" onClick={() => openChat(otherParticipant)}>
@@ -72,13 +72,13 @@ const MyConversations: React.FC = () => {
                     <div
                       className={`absolute -top-3 -right-3 h-2 w-2 ${isOnline ? 'bg-green-500' : 'bg-red-500'} text-white text-xs px-2 py-1 rounded-full`}
                     ></div>
-                    <img src={otherParticipant.avatar} alt="Avatar" className="w-12 h-12 rounded-full mr-4" />
+                    <img src={otherParticipant.avatar} alt="Avatar" className="dark:border-green dark:border-2 w-12 h-12 rounded-full mr-4" />
                   </div>
                   <div>
                     <p className="text-lg font-semibold">{otherParticipant.username}</p>
                     {/* Displaying the last message */}
                     {conversation.messages.length > 0 && (
-                      <p className="text-gray-500">
+                      <p className="text-gray-500 dark:text-white">
                         {conversation.messages[conversation.messages.length - 1].message}
                       </p>
                     )}

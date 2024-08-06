@@ -37,7 +37,7 @@ const PostCard: React.FC<PostCardProps> = ({
   };
   return (
     <>
-    <div className="bg-white p-4 rounded-lg shadow-lg mb-4">
+    <div className="bg-white dark:bg-gray-800 dark:text-white p-4 rounded-lg shadow-lg mb-4">
     <div className="bg-white rounded-lg shadow-lg relative z-10">
       {popup && <Chatcard creatorAvatar={avatar} popup={popup} Buyerid={Buyerid} creatorName={creatorName} closeChat={handleCloseChat} />}
       </div>
@@ -56,14 +56,14 @@ const PostCard: React.FC<PostCardProps> = ({
         </div>
         <span className="text-lg font-semibold">{creatorName}</span>
         {/* Date and time */}
-        <span className="text-gray-600 ml-2">
+        <span className="text-gray-600 dark:text-white ml-2">
           {createdAt}
         </span>
         {user?.role === 'seller' && <button onClick={handleClick} className="ml-auto rounded-2xl shadow-2xl text-center hover:text-black focus:outline-none cursor-pointer hover:underline bg-green-600 text-white px-4 py-2">Respond</button>}
       </div>
       
       {/* Content */}
-      <p className="text-gray-800 mb-4">{content}</p>
+      <p className="text-gray-800 mb-4 dark:text-white">{content}</p>
 
       {/* Media preview (if present) */}
       {mediaPreview && (
@@ -78,12 +78,12 @@ const PostCard: React.FC<PostCardProps> = ({
 
       {/* Like and comment buttons */}
       <div className="flex justify-between items-center">
-        <button className="flex items-center text-gray-600 hover:text-blue-500 focus:outline-none">
-          <IoHeartOutline className="text-xl mr-1" />
+        <button className="flex items-center dark:text-white text-gray-600 hover:text-blue-500 focus:outline-none">
+          <IoHeartOutline className="dark:text-white text-xl mr-1" />
           Like
         </button>
-        <button className="flex items-center text-gray-600 hover:text-blue-500 focus:outline-none">
-          <IoChatboxOutline className="text-xl mr-1" />
+        <button className="flex items-center dark:text-white text-gray-600 hover:text-blue-500 focus:outline-none">
+          <IoChatboxOutline className="dark:text-white text-xl mr-1" />
           Comment
         </button>
       </div>

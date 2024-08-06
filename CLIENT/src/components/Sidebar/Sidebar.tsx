@@ -42,12 +42,12 @@ const Sidebar = () => {
           <li key={index} className="mb-2 flex items-center">
             <Menu.icon className="mr-3 cursor-pointer" onClick={() => handleMenuClick(Menu.action, Menu.link)} />
             {Menu.link ? (
-              <Link to={Menu.link} className={`text-blue-500 ${!open && 'hidden sm:block'}`}>
+              <Link to={Menu.link} className={`text-blue-500 ${!open && 'hidden md:block sm:block'}`}>
                 <span className={`${open ? 'block' : 'hidden'} sm:inline`}>{Menu.title}</span>
               </Link>
             ) : (
               Menu.title && (
-                <button className={`text-blue-500 ${!open && 'hidden sm:block'}`} onClick={() => handleMenuClick(Menu.action, Menu.link)}>
+                <button className={`text-blue-500 ${!open && 'hidden md:block sm:block'}`} onClick={() => handleMenuClick(Menu.action, Menu.link)}>
                   <span className={`${open ? 'block' : 'hidden'} sm:inline`}>{Menu.title}</span>
                 </button>
               )

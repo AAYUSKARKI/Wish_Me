@@ -12,7 +12,7 @@ interface Notification {
   // utils/notification.ts
 const sendNotification = async (title: string, message: string) => {
     try {
-      const response = await fetch('https://wish-me-65k8.onrender.com/sendNotification', {
+      const response = await fetch('http://localhost:7000/sendNotification', {
         method: 'POST',
         body: JSON.stringify({ title, message }),
         headers: {

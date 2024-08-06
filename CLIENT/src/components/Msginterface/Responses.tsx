@@ -4,7 +4,7 @@ import Sidebar from "../Sidebar/Sidebar";
 function Responses() {
   return (
     <>
-     <div className="flex">
+     <div className="h-screen flex overflow-hidden">
       <Sidebar/>
       <MyConversations/>
      </div>
