@@ -148,6 +148,7 @@ requestNotificationPermission();
           <Route path="/resend-verification" element={<ResendVerification />} />
           <Route path="/termsofservice" element={<TermsOfService />} />
           <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+          <Route path="/resetpassword/:token" element={<ResetPassword />} />
           <Route path="/cookiepolicy" element={<CookiePolicy/>}/>
           <Route element={<PrivateRoute />}>
             <Route path="/requests" element={<HomePage />} />
@@ -157,7 +158,6 @@ requestNotificationPermission();
             <Route path="/notifications" element={<NotificationList/>}/> 
             <Route path="/messages" element={<MessagingInterface />} />
             <Route path="/my-conversations" element={<Responses />} />
-            <Route path="/resetpassword/:token" element={<ResetPassword />} />
           </Route>
           <Route element={<SellerRoute />}>
             <Route path="/seller-dashboard" element={<SellerDashboard />} />
