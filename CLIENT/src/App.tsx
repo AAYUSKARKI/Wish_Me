@@ -143,7 +143,7 @@ requestNotificationPermission();
           <Route path="/register" element={<Signup />} />
           <Route path="/responses" element={<Responses />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/settings" element={<Setting />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify" element={<VerifyEmail />} />
           <Route path="/resend-verification" element={<ResendVerification />} />
           <Route path="/termsofservice" element={<TermsOfService />} />
@@ -153,10 +153,10 @@ requestNotificationPermission();
             <Route path="/requests" element={<HomePage />} />
             <Route path="/post-request" element={<Createrequest />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/settings" element={<Setting />} />
             <Route path="/notifications" element={<NotificationList/>}/> 
             <Route path="/messages" element={<MessagingInterface />} />
             <Route path="/my-conversations" element={<Responses />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/resetpassword/:token" element={<ResetPassword />} />
           </Route>
           <Route element={<SellerRoute />}>
