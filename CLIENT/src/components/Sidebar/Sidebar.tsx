@@ -12,7 +12,7 @@ const Sidebar = () => {
   const Menus = [
     { title: user.role === 'buyer' ? 'My Requests' : 'Browse Requests', link: user.role === 'buyer' ? '/my-requests' : '/browse-requests', icon: FaHome },
     { title: 'Conversations', link: '/my-conversations', icon: FaComments },
-    { title: user.role === 'buyer' ? 'Post a Request' : '', link: user.role === 'buyer' ? '/post-request' : '', icon: FaPlus },
+    { title: user.role === 'buyer' ? 'Post a Request' : '', link: user.role === 'buyer' ? '/post-request' : '', icon:user.role === 'buyer' ? FaPlus : '' },
     { title: 'Notifications', link: '/notifications', icon: FaBell },
     { title: 'Profile', link: '/profile', icon: FaUser },
     { title: 'Settings', link: '/settings', icon: FaCog },

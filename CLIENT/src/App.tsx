@@ -161,6 +161,7 @@ requestNotificationPermission();
           </Route>
           <Route element={<SellerRoute />}>
             <Route path="/seller-dashboard" element={<SellerDashboard />} />
+            <Route path="/browse-requests" element={<SellerDashboard />} />
           </Route>
           <Route element={<BuyerRoute />}>
             <Route path="/buyer-dashboard" element={<BuyerDashboard />} />
