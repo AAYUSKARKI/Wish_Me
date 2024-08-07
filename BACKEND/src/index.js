@@ -35,7 +35,7 @@ const userIdToSocketId = new Map();
 // MongoDB connection
 connectdb()
   .then(() => {
-    console.log("MongoDB connected");
+    // console.log("MongoDB connected");
 
     io.on("connection", async (socket) => {
       console.log(`User Connected: ${socket.id}`);
@@ -47,6 +47,7 @@ connectdb()
           const user = await User.findById(userId);
           if (user) {
             onlineUsers.set(socket.id, user);
+            console.log(onlineUsers,'is online users')
             userIdToSocketId.set(userId, socket.id); // Store reverse mapping
             console.log(`User ${user.username} (${userId}) is online`);
             console.log(`Mapped user ${user.username} (${userId}) to socket ID ${socket.id}`);
@@ -58,7 +59,7 @@ connectdb()
     
             // Broadcast updated user list to all clients
             io.emit('userList', Array.from(onlineUsers.values()));
-            console.log('Current userIdToSocketId map after online event:', Array.from(userIdToSocketId.entries()));
+            // console.log('Current userIdToSocketId map after online event:', Array.from(userIdToSocketId.entries()));
           }
         } catch (err) {
           console.error(`Error finding user ${userId}:`, err);

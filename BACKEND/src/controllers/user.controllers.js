@@ -72,7 +72,7 @@ const registerUser = asynchandler(async (req, res) => {
     }
 
     if(role==="seller"){
-        sellerCategory = JSON.stringify(sellerCategory)
+        sellerCategory = JSON.parse(sellerCategory)
     }
 
     const user = await User.create({

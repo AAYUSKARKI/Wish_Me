@@ -52,7 +52,7 @@ const userschema = new Schema(
             type: Date
         },
         onlineStatus: { type: Boolean, default: false }, // Online status
-  lastOnline: { type: Date }, // Last online timestamp
+  lastOnline: { type: Date, default: Date.now }, // Last online timestamp
     },
     {
         timestamps: true

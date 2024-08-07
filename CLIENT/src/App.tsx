@@ -36,7 +36,7 @@ function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((state: any) => state.user);
   const [loading, setLoading] = useState<boolean>(true);
-
+console.log(user)
   useEffect(() => {
     if (user?._id) {
       socket.emit('online', user._id);

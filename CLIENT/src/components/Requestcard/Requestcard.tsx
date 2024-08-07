@@ -1,16 +1,19 @@
-import React,{useState} from "react";
-import { IoHeartOutline, IoChatboxOutline } from "react-icons/io5";
+import React, { useState } from "react";
+import { IoHeartOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
 import Chatcard from "../Respondchat/Chatcard";
+import CommentSection from "../Comment/Comment";
 
 interface PostCardProps {
-  avatar: string; // URL of the avatar image
+  avatar: string;
   creatorName: string;
   content: string;
-  mediaPreview?: string | null; // URL of the media preview image (optional)
+  mediaPreview?: string | null;
   createdAt: string;
   onlineStatus: boolean;
+  lastOnline: string;
   Buyerid: string;
+  postId: string;
 }
 
 const PostCard: React.FC<PostCardProps> = ({
@@ -19,75 +22,87 @@ const PostCard: React.FC<PostCardProps> = ({
   content,
   mediaPreview,
   createdAt,
-  Buyerid
+  Buyerid,
+  lastOnline,
+  postId,
 }) => {
   const { user } = useSelector((state: any) => state.user);
-  const [popup,setPopup] = useState<boolean>(false)
-  const {onlineuser} = useSelector((state: any) => state.onlineuser);
-//   console.log(onlineuser,'is the online user');
-  const isOnline = onlineuser.some((user:any)=>user._id === Buyerid);
-//   console.log(isOnline,'is online')
+  const [popup, setPopup] = useState<boolean>(false);
+  const { onlineuser } = useSelector((state: any) => state.onlineuser);
+  console.log(onlineuser)
+  const isOnline = onlineuser.some((user: any) => user._id === Buyerid);
 
-  const handleClick = ()=>{
-    setPopup(true)
-    console.log("Respond button clicked");
-  }
+  const handleClick = () => {
+    setPopup(true);
+  };
+
   const handleCloseChat = () => {
     setPopup(false);
   };
+
   return (
     <>
-    <div className="bg-white dark:bg-gray-800 dark:text-white p-4 rounded-lg shadow-lg mb-4">
-    <div className="bg-white rounded-lg shadow-lg relative z-10">
-      {popup && <Chatcard creatorAvatar={avatar} popup={popup} Buyerid={Buyerid} creatorName={creatorName} closeChat={handleCloseChat} />}
-      </div>
-      {/* Avatar and creator name */}
-      <div className="flex items-center mb-4">
-        {/* Avatar */}
-        <div className="relative">
-          <div
-            className={`absolute -top-3 -right-3 ${isOnline ? "bg-green-500" : "bg-red-500"} h-2 w-2 text-white text-xs px-2 py-1 rounded-full`}
-          ></div>
-          <img
-            src={avatar}
-            alt="Avatar"
-            className="w-12 h-12 rounded-full object-cover mr-2"
-          />
+      <div className="bg-white dark:bg-gray-800 dark:text-white p-4 rounded-lg shadow-lg mb-4 relative max-w-full md:max-w-lg lg:max-w-2xl mx-auto">
+        {popup && (
+          <div className="absolute inset-0 z-10">
+            <Chatcard
+              creatorAvatar={avatar}
+              popup={popup}
+              Buyerid={Buyerid}
+              lastOnline={lastOnline}
+              creatorName={creatorName}
+              closeChat={handleCloseChat}
+            />
+          </div>
+        )}
+        <div className="flex items-center mb-4">
+          <div className="relative">
+            <img
+              src={avatar}
+              alt="Avatar"
+              className="w-12 h-12 rounded-full object-cover mr-2"
+            />
+            <div
+              className={`absolute bottom-0 right-0 h-3 w-3 rounded-full ${
+                isOnline ? "bg-green-500" : "bg-red-500"
+              }`}
+            ></div>
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center">
+              <span className="text-lg font-semibold">{creatorName}</span>
+              <span className="text-gray-500 dark:text-gray-400 ml-2 text-sm">
+                {createdAt}
+              </span>
+            </div>
+          </div>
+          {user?.role === "seller" && (
+            <button
+              onClick={handleClick}
+              className="ml-auto bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-blue-600 focus:outline-none"
+            >
+              Respond
+            </button>
+          )}
         </div>
-        <span className="text-lg font-semibold">{creatorName}</span>
-        {/* Date and time */}
-        <span className="text-gray-600 dark:text-white ml-2">
-          {createdAt}
-        </span>
-        {user?.role === 'seller' && <button onClick={handleClick} className="ml-auto rounded-2xl shadow-2xl text-center hover:text-black focus:outline-none cursor-pointer hover:underline bg-green-600 text-white px-4 py-2">Respond</button>}
-      </div>
-      
-      {/* Content */}
-      <p className="text-gray-800 mb-4 dark:text-white">{content}</p>
-
-      {/* Media preview (if present) */}
-      {mediaPreview && (
-        <div className="relative mb-4">
-          <img
-            src={mediaPreview}
-            alt="Post Media"
-            className="w-48 h-48 object-cover rounded-lg shadow-xl"
-          />
+        <p className="text-gray-800 mb-4 dark:text-gray-200">{content}</p>
+        {mediaPreview && (
+          <div className="relative mb-4">
+            <img
+              src={mediaPreview}
+              alt="Post Media"
+              className="w-full h-auto object-cover rounded-lg shadow-xl lg:h-[400px]"
+            />
+          </div>
+        )}
+        <div className="flex justify-between items-center pt-2 border-t border-gray-300 dark:border-gray-700">
+          <button className=" flex items-center text-gray-600 dark:text-gray-300 hover:text-blue-500 focus:outline-none">
+            <IoHeartOutline className="text-2xl mr-1" />
+            Like
+          </button>
+          <CommentSection postId={postId} />
         </div>
-      )}
-
-      {/* Like and comment buttons */}
-      <div className="flex justify-between items-center">
-        <button className="flex items-center dark:text-white text-gray-600 hover:text-blue-500 focus:outline-none">
-          <IoHeartOutline className="dark:text-white text-xl mr-1" />
-          Like
-        </button>
-        <button className="flex items-center dark:text-white text-gray-600 hover:text-blue-500 focus:outline-none">
-          <IoChatboxOutline className="dark:text-white text-xl mr-1" />
-          Comment
-        </button>
       </div>
-    </div>
     </>
   );
 };

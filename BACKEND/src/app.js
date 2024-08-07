@@ -31,10 +31,12 @@ app.use(cookieParser())
 import userRouter from './routes/user.routes.js'
 import messageRouter from './routes/message.routes.js'
 import requestRouter from './routes/request.routes.js'
+import commentRouter from './routes/comment.routes.js'
 //routes declaration
 app.use("/api/v1/users",userRouter)
 app.use("/api/v1/messages",messageRouter)
 app.use("/api/v1/requests",requestRouter)
+app.use("/api/v1/comments",commentRouter)
 
 const vapidKeys = {
   publicKey: process.env.publicKey,

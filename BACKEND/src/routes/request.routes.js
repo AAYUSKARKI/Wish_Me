@@ -1,13 +1,13 @@
 import { Router } from "express";
 import {
     createPost,
-    getPostsByCommunity,
-    createPostsByCommunity,
     getPostById,
     getMyposts,
     deletePost,
     getAllPosts,
-    myposts
+    myposts,
+    getPostByMyCategory,
+    getCommentsForPost
 } from "../controllers/request.controller.js";
 
 import {upload} from "../middleware/multer.middleware.js"
@@ -23,12 +23,13 @@ router.route("/:id")
     .get(verifyJWT, getPostById)
     .delete(verifyJWT, deletePost);
 
-router.route("/community/:id")
-    .post(verifyJWT,upload.single("media"), createPostsByCommunity)
-    .get(verifyJWT, getPostsByCommunity);
 
-router.route("/myposts").get(verifyJWT, getMyposts);
+router.route("/myrequests").get(verifyJWT, getMyposts);
 
-router.route("/myposts/myposts").get(verifyJWT, myposts);
+router.route("/myposts/myposts").get(verifyJWT,getPostByMyCategory);
+
+router.route("/comments/:id").get(getCommentsForPost);
+
+router.route("/posts/requests/myposts").get(verifyJWT,myposts);
 
 export default router;

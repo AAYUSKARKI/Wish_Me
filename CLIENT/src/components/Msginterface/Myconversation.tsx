@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Chatcard from '../Respondchat/Chatcard';
-
+import moment from 'moment';
 interface Participant {
   _id: string;
   username: string;
   avatar: string;
+  lastOnline: string;
 }
 
 interface Message {
@@ -94,6 +95,7 @@ const MyConversations: React.FC = () => {
           popup={popup}
           Buyerid={selectedConversation._id}
           closeChat={closeChat}
+          lastOnline={moment(selectedConversation.lastOnline).fromNow()}
           creatorName={selectedConversation.username}
           creatorAvatar={selectedConversation.avatar}
         />

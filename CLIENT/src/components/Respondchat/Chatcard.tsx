@@ -18,7 +18,7 @@ interface Conversation {
   messages: Message[];
 }
 
-const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: string, Buyerid: string, closeChat: () => void }> = ({ popup, Buyerid, closeChat, creatorName, creatorAvatar }) => {
+const Chatcard: React.FC<{ popup: boolean,lastOnline:string, creatorName: string, creatorAvatar: string, Buyerid: string, closeChat: () => void }> = ({ popup, Buyerid, closeChat, creatorName, creatorAvatar }) => {
   const { user } = useSelector((state: any) => state.user);
   const [messages, setMessages] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
@@ -26,7 +26,6 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { onlineuser } = useSelector((state: any) => state.onlineuser);
   const isOnline = onlineuser.some((user: any) => user._id === Buyerid);
-
   const getMessages = async () => {
     try {
       setLoading(true);
@@ -117,9 +116,10 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
               />
             </div>
             <span className="text-lg font-semibold text-black dark:text-white">{creatorName}</span>
+            <span>{lastOnline}</span>
           </div>
           <button onClick={closeChat}>
-            <IoClose className="text-2xl text-white dark:text-white" />
+            <IoClose className="text-2xl text-black dark:text-white" />
           </button>
         </div>
 

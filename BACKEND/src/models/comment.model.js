@@ -1,12 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 
-const postSchema = new Schema({
-  content: {
+const commentSchema = new Schema({
+  text: {
     type: String,
     required: true,
-  },
-  media: {
-    type: String,
   },
   createdBy: {
     type: Schema.Types.ObjectId,
@@ -21,19 +18,25 @@ const postSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  likes: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
-  category: {
-    type: Array,
+  post: {
+    type: Schema.Types.ObjectId,
+    ref: 'Post',
+    required: true,
   },
-  comments: [
+  parentComment: {
+    type: Schema.Types.ObjectId,
+    ref: 'Comment',
+  },
+  replies: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Comment',
+    },
+  ],
+  mentions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
   ],
 },
@@ -41,4 +44,4 @@ const postSchema = new Schema({
     timestamps: true,
   });
 
-export const Post = mongoose.model('Post', postSchema);
+export const Comment = mongoose.model('Comment', commentSchema);
