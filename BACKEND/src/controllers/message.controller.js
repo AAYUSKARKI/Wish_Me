@@ -72,13 +72,13 @@ const getConversations = async (req, res) => {
             .sort({ updatedAt: -1 }) // Sort by most recent message
             .populate({
                 path: 'participations',
-                select: 'username avatar' // Populate participations with username and avatar
+                select: 'username avatar lastOnline' // Populate participations with username and avatar
             })
             .populate({
                 path: 'messages',
                 populate: {
                     path: 'senderId receiverId',
-                    select: 'username avatar' // Populate senderId and receiverId fields in messages
+                    select: 'username avatar lastOnline' // Populate senderId and receiverId fields in messages
                 }
             })
             .exec();

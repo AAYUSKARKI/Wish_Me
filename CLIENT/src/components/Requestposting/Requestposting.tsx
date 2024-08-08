@@ -30,7 +30,7 @@ const CreateRequest: React.FC = () => {
   useEffect(() => {
     const fetchSellerCategories = async () => {
       try {
-        const response = await axios.get("https://wish-me-65k8.onrender.com/api/v1/users/sellercategory");
+        const response = await axios.get("http://localhost:7000/api/v1/users/sellercategory");
         if (response.data.success) {
           setAvailableCategories(response.data.data);
         }
@@ -108,7 +108,7 @@ const CreateRequest: React.FC = () => {
     setLoading(true);
     try {
       axios.defaults.withCredentials = true;
-      await axios.post("https://wish-me-65k8.onrender.com/api/v1/requests", formData, {
+      await axios.post("http://localhost:7000/api/v1/requests", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -129,9 +129,9 @@ const CreateRequest: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen dark:bg-gray-950">
+    <div className="flex relative h-screen dark:bg-gray-950">
       <Sidebar/>
-    <div className="overflow-scroll ml-3 w-3/4 p-4 border border-gray-300 rounded-xl shadow-2xl bg-blue-600 dark:bg-gray-950 dark:border-gray-800">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ml-3 w-3/4 p-4 border border-gray-300 rounded-xl shadow-2xl bg-blue-600 dark:bg-gray-950 dark:border-gray-800">
       <div className="flex justify-between items-center mb-4">
         {/* <IoArrowBack className="text-3xl cursor-pointer text-gray-700 dark:text-gray-300" /> */}
         <p className="text-sm lg:text-5xl md:text-3xl font-bold text-black dark:text-white p-2">Create Request For Products</p>

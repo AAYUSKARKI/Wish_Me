@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FaHome, FaComments, FaBell, FaUser, FaCog, FaSignOutAlt, FaPlus, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaHome, FaComments, FaBell, FaUser, FaCog, FaSignOutAlt, FaPlus, FaBars, FaTimes, FaEllipsisV } from 'react-icons/fa';
 import { setuser } from '../Redux/Userslice'; // Adjust the import path as necessary
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isBottom, setIsBottom] = useState(false); // State to toggle top/bottom position
   const { user } = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // useNavigate hook for navigation
 
   const menus = [
     {
@@ -53,39 +55,58 @@ const Sidebar = () => {
       action();
     }
     if (link) {
-      window.location.href = link;
+      navigate(link); // Use navigate for programmatic navigation
     }
   };
 
   return (
-    <aside className={`bg-gray-100 dark:bg-gray-950 dark:text-white text-black h-screen p-4 relative duration-300 ${isOpen ? 'w-72' : 'w-20'}`}>
+    <div className="relative z-50">
       <button
-        className="absolute top-8 -right-3 w-6 h-6 rounded-full bg-gray-800 text-white flex items-center justify-center cursor-pointer"
+        className="md:hidden p-4"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
+        {isOpen ? <FaTimes /> : <FaBars />}
       </button>
-      <ul>
-        {menus.map((menu, index) => (
-          <li key={index} className="mb-2 flex items-center">
-            {menu.icon && (
-              <menu.icon className="mr-3 cursor-pointer" onClick={() => handleMenuClick(menu.action, menu.link)} />
-            )}
-            {menu.link ? (
-              <Link to={menu.link} className={`text-blue-500 ${!isOpen && 'hidden md:block sm:block'}`}>
-                <span className={`${isOpen ? 'block' : 'hidden'} sm:inline`}>{menu.title}</span>
-              </Link>
-            ) : (
-              menu.title && (
-                <button className={`text-blue-500 ${!isOpen && 'hidden md:block sm:block'}`} onClick={() => handleMenuClick(menu.action, menu.link)}>
-                  <span className={`${isOpen ? 'block' : 'hidden'} sm:inline`}>{menu.title}</span>
-                </button>
-              )
-            )}
+      <aside
+        className={`fixed ${isBottom ? 'bottom-0' : 'top-0'} left-0 right-0 bg-gray-100 dark:bg-gray-950 dark:text-white text-black p-4 transition-all duration-300 ${isOpen ? 'block' : 'hidden md:flex'}`}
+      >
+        <ul className={`flex flex-row justify-around md:text-xl  w-full ${isOpen ? 'space-x-6' : 'space-x-4'} ${!isOpen && 'lg:space-x-12'}`}>
+          {menus.map((menu, index) => (
+            <li key={index} className="group relative flex flex-col items-center">
+              {menu.icon && (
+                <menu.icon
+                  className="text-xl cursor-pointer"
+                  onClick={() => handleMenuClick(menu.action, menu.link)}
+                />
+              )}
+              {menu.link ? (
+                <Link 
+                  to={menu.link} 
+                  className={`hidden group-hover:block absolute top-full left-1/2 md:left-auto transform -translate-x-1/2 bg-gray-800 text-white rounded-md px-2 py-1 md:bg-transparent md:text-black dark:md:text-white md:px-0 md:py-0  md:ml-3 ${!isOpen && 'hidden'}`}
+                >
+                  {menu.title}
+                </Link>
+              ) : (
+                menu.title && (
+                  <button
+                    className={`hidden group-hover:block absolute top-full left-1/2 md:left-auto transform -translate-x-1/2 bg-gray-800 text-white rounded-md px-2 py-1 md:bg-transparent md:text-black dark:md:text-white md:px-0 md:py-0 md:ml-3 ${!isOpen && 'hidden'}`}
+                    onClick={() => handleMenuClick(menu.action, menu.link)}
+                  >
+                    {menu.title}
+                  </button>
+                )
+              )}
+            </li>
+          ))}
+          <li className="group relative flex flex-col items-center">
+            <FaEllipsisV className="text-xl cursor-pointer" onClick={() => setIsBottom(!isBottom)} />
+            <span className="hidden group-hover:block absolute top-full left-1/2 md:left-auto transform -translate-x-1/2 bg-gray-800 text-white rounded-md px-2 py-1 md:bg-transparent md:text-black dark:md:text-white md:px-0 md:py-0  md:ml-3">
+              Toggle Position
+            </span>
           </li>
-        ))}
-      </ul>
-    </aside>
+        </ul>
+      </aside>
+    </div>
   );
 };
 

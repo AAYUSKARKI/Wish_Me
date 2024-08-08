@@ -18,7 +18,7 @@ interface Conversation {
   messages: Message[];
 }
 
-const Chatcard: React.FC<{ popup: boolean,lastOnline:string, creatorName: string, creatorAvatar: string, Buyerid: string, closeChat: () => void }> = ({ popup, Buyerid, closeChat, creatorName, creatorAvatar }) => {
+const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: string, Buyerid: string, closeChat: () => void }> = ({ popup, Buyerid, closeChat, creatorName, creatorAvatar }) => {
   const { user } = useSelector((state: any) => state.user);
   const [messages, setMessages] = useState<Conversation | null>(null);
   const [newMessage, setNewMessage] = useState('');
@@ -30,7 +30,7 @@ const Chatcard: React.FC<{ popup: boolean,lastOnline:string, creatorName: string
     try {
       setLoading(true);
       axios.defaults.withCredentials = true;
-      const res = await axios.get(`https://wish-me-65k8.onrender.com/api/v1/messages/getmessage/${Buyerid}`);
+      const res = await axios.get(`http://localhost:7000/api/v1/messages/getmessage/${Buyerid}`);
       setMessages(res.data.data);
       setLoading(false);
     } catch (error) {
@@ -85,11 +85,11 @@ const Chatcard: React.FC<{ popup: boolean,lastOnline:string, creatorName: string
         message: newMessage,
       };
 
-      await axios.post(`https://wish-me-65k8.onrender.com/api/v1/messages/sendmessage/${Buyerid}`, messageData);
+      await axios.post(`http://localhost:7000/api/v1/messages/sendmessage/${Buyerid}`, messageData);
       setNewMessage('');
 
       // Send notification
-      await axios.post('https://wish-me-65k8.onrender.com/sendNotification', {
+      await axios.post('http://localhost:7000/sendNotification', {
         title: 'New Message',
         message: newMessage,
       });
@@ -116,7 +116,6 @@ const Chatcard: React.FC<{ popup: boolean,lastOnline:string, creatorName: string
               />
             </div>
             <span className="text-lg font-semibold text-black dark:text-white">{creatorName}</span>
-            <span>{lastOnline}</span>
           </div>
           <button onClick={closeChat}>
             <IoClose className="text-2xl text-black dark:text-white" />

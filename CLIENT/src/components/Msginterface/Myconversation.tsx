@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Chatcard from '../Respondchat/Chatcard';
 import moment from 'moment';
+
 interface Participant {
   _id: string;
   username: string;
@@ -33,7 +34,7 @@ const MyConversations: React.FC = () => {
     const fetchConversations = async () => {
       try {
         axios.defaults.withCredentials = true;
-        const res = await axios.get(`https://wish-me-65k8.onrender.com/api/v1/messages/myconvo`);
+        const res = await axios.get(`http://localhost:7000/api/v1/messages/myconvo`);
         setConversations(res.data.conversations);
       } catch (error) {
         console.error('Error fetching conversations:', error);
@@ -54,9 +55,9 @@ const MyConversations: React.FC = () => {
   };
 
   return (
-    <div className="dark:bg-gray-950 dark:text-white container mx-auto overflow-y-scroll">
-      <h1 className="text-2xl font-semibold mt-8 mb-4">My Conversations</h1>
-      <div className="grid gap-4">
+    <div className="dark:bg-gray-950 dark:text-white container mx-auto p-3 w-full">
+      <h1 className="text-3xl font-bold mt-8 mb-6">My Conversations</h1>
+      <div className="space-y-6">
         {conversations.map((conversation) => {
           const otherParticipant = conversation.participations.find(
             (participant) => participant._id !== user._id
@@ -65,21 +66,25 @@ const MyConversations: React.FC = () => {
           const isOnline = onlineuser.some((onlineUser: any) => onlineUser._id === otherParticipant?._id);
 
           return (
-            <div key={conversation._id} className="bg-white dark:bg-slate-900 dark:text-white p-4 shadow rounded-lg flex items-center justify-between">
-              {/* Participant Info */}
+            <div 
+              key={conversation._id} 
+              className="bg-white dark:bg-slate-900 dark:text-white p-5 shadow-lg rounded-lg flex items-center justify-between transition-transform transform hover:scale-105"
+            >
               {otherParticipant && (
-                <div className="flex items-center cursor-pointer" onClick={() => openChat(otherParticipant)}>
-                  <div className="relative">
+                <div className="flex items-center cursor-pointer w-full" onClick={() => openChat(otherParticipant)}>
+                  <div className="relative mr-4">
                     <div
-                      className={`absolute -top-3 -right-3 h-2 w-2 ${isOnline ? 'bg-green-500' : 'bg-red-500'} text-white text-xs px-2 py-1 rounded-full`}
+                      className={`absolute -top-2 -right-2 h-4 w-4 ${isOnline ? 'bg-green-500' : 'bg-red-500'} rounded-full border-2 border-white dark:border-slate-900`}
                     ></div>
-                    <img src={otherParticipant.avatar} alt="Avatar" className="dark:border-green dark:border-2 w-12 h-12 rounded-full mr-4" />
+                    <img src={otherParticipant.avatar} alt="Avatar" className="w-14 h-14 rounded-full border-2 border-gray-300 dark:border-slate-700" />
                   </div>
-                  <div>
-                    <p className="text-lg font-semibold">{otherParticipant.username}</p>
-                    {/* Displaying the last message */}
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <p className="text-xl font-semibold">{otherParticipant.username}</p>
+                      {!isOnline && <p className="text-sm text-gray-500 dark:text-gray-400">{moment(otherParticipant.lastOnline).fromNow()}</p>}
+                    </div>
                     {conversation.messages.length > 0 && (
-                      <p className="text-gray-500 dark:text-white">
+                      <p className="text-gray-600 dark:text-gray-400 mt-2 truncate">
                         {conversation.messages[conversation.messages.length - 1].message}
                       </p>
                     )}
@@ -95,7 +100,6 @@ const MyConversations: React.FC = () => {
           popup={popup}
           Buyerid={selectedConversation._id}
           closeChat={closeChat}
-          lastOnline={moment(selectedConversation.lastOnline).fromNow()}
           creatorName={selectedConversation.username}
           creatorAvatar={selectedConversation.avatar}
         />

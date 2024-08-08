@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { socket } from '../components/Socket/index';
 import Sidebar from '../components/Sidebar/Sidebar';
+
 interface Notification {
     senderName: string;
     message: string;
@@ -12,7 +13,7 @@ interface Notification {
   // utils/notification.ts
 const sendNotification = async (title: string, message: string) => {
     try {
-      const response = await fetch('https://wish-me-65k8.onrender.com/sendNotification', {
+      const response = await fetch('http://localhost:7000/sendNotification', {
         method: 'POST',
         body: JSON.stringify({ title, message }),
         headers: {
@@ -47,9 +48,9 @@ const NotificationList: React.FC = () => {
   return (
     <>
     <Sidebar/>
-    <div className="fixed top-0 right-0 p-4 w-80 h-screen overflow-y-auto bg-white shadow-lg">
+    <div className="absolute top-[3.4rem] right-0 p-4 w-80 h-screen dark:bg-gray-950 bg-white shadow-lg">
       {notifications.length === 0 ? (
-        <p>No new notifications</p>
+        <p className='text-black dark:text-white'>No new notifications</p>
       ) : (
         notifications.map((notification, index) => (
           <div

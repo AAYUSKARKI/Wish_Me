@@ -12,7 +12,6 @@ interface Post {
     username: string;
     avatar: string;
     onlineStatus: boolean;
-    lastOnline: string;
     _id: string;
   };
   createdAt: string;
@@ -40,7 +39,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("https://wish-me-65k8.onrender.com/api/v1/requests");
+        const response = await axios.get("http://localhost:7000/api/v1/requests");
         setPosts(response.data.data);
       } catch (err) {
         setError("Failed to fetch posts");
@@ -55,7 +54,7 @@ const HomePage: React.FC = () => {
     const fetchMyCategoryPosts = async () => {
       try {
         axios.defaults.withCredentials = true;
-        const response = await axios.get("https://wish-me-65k8.onrender.com/api/v1/requests/myposts/myposts");
+        const response = await axios.get("http://localhost:7000/api/v1/requests/myposts/myposts");
         setMyCategoryPosts(response.data.data);
       } catch (err) {
         setError("Failed to fetch category posts");
@@ -67,7 +66,7 @@ const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-4 w-full h-full overflow-y-auto">
+    <div className="p-4 w-full dark:bg-gray-950 h-full">
       {loadingCategoryPosts ? (
         <p>Loading recommended posts...</p>
       ) : (
@@ -79,7 +78,6 @@ const HomePage: React.FC = () => {
             mycategoryposts.map((post) => (
               <PostCard
                 key={post._id}
-                lastOnline={post.createdBy?.lastOnline}
                 postId={post._id}
                 avatar={post.createdBy?.avatar}
                 creatorName={post.createdBy.username}
@@ -111,7 +109,6 @@ const HomePage: React.FC = () => {
                 content={post.content}
                 mediaPreview={post.media}
                 onlineStatus={post.createdBy?.onlineStatus}
-                lastOnline={moment(post.createdBy?.lastOnline).fromNow()}
                 Buyerid={post.createdBy?._id}
                 createdAt={moment(post.createdAt).fromNow()}
               />

@@ -11,7 +11,6 @@ interface PostCardProps {
   mediaPreview?: string | null;
   createdAt: string;
   onlineStatus: boolean;
-  lastOnline: string;
   Buyerid: string;
   postId: string;
 }
@@ -23,7 +22,6 @@ const PostCard: React.FC<PostCardProps> = ({
   mediaPreview,
   createdAt,
   Buyerid,
-  lastOnline,
   postId,
 }) => {
   const { user } = useSelector((state: any) => state.user);
@@ -49,7 +47,6 @@ const PostCard: React.FC<PostCardProps> = ({
               creatorAvatar={avatar}
               popup={popup}
               Buyerid={Buyerid}
-              lastOnline={lastOnline}
               creatorName={creatorName}
               closeChat={handleCloseChat}
             />
