@@ -45,7 +45,6 @@ const Chatcard: React.FC<{ popup: boolean, creatorName: string, creatorAvatar: s
     }
 
     const handleMessage = (data: Message) => {
-      console.log('New message received:', data);
       setMessages((prev) => {
         if (!prev) {
           return {

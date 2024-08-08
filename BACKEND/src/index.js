@@ -130,12 +130,12 @@ connectdb()
       const notification = await Notification.create({
         userId: receiverIdString,
         senderId: senderIdString,
-        message: `New message from ${sender.username}`,
+        message: `got a message from ${sender.username}`,
       });
   
       io.to(receiverSocketId).emit('notification', {
         sendername: sender.username,
-        message: `New message from ${sender.username}`,
+        message: `got a message from ${sender.username}`,
         avatar: sender.avatar,
         timestamp: notification.createdAt,
       });

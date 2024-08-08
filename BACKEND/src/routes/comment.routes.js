@@ -4,7 +4,8 @@ import {
     getCommentsForPost,
     getCommentById,
     deleteComment,
-    getCommentsByUser
+    getCommentsByUser,
+    getNotifications
 } from "../controllers/comment.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
@@ -18,5 +19,7 @@ router.route("/:id")
     
 router.route("/user/:id").get(getCommentsByUser)
 router.route("/getcommentbyid/:id").get(getCommentById)
+
+router.route("/abc/cde/notifications").get(verifyJWT, getNotifications)
   
 export default router;

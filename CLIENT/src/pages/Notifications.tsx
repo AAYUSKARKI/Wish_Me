@@ -2,14 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { socket } from '../components/Socket/index';
 import Sidebar from '../components/Sidebar/Sidebar';
-
+import axios from 'axios'
 interface Notification {
     senderName: string;
     message: string;
     avatar: string;
     timestamp: string;
   }
-
   // utils/notification.ts
 const sendNotification = async (title: string, message: string) => {
     try {
@@ -35,16 +34,36 @@ const NotificationList: React.FC = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    socket.on('notification', (data: Notification) => {
+    const handleNotification = (data: Notification) => {
+      console.log('handling notifications')
       setNotifications((prevNotifications) => [...prevNotifications, data]);
-    });
-
-    sendNotification('New Notification', 'You have a new notification!');
+      sendNotification('New Notification', 'You have a new notification!');
+    };
+  
+    socket.on('notification', handleNotification);
+    socket.on('new-notification', handleNotification);
+  
     return () => {
-      socket.off('notification');
+      socket.off('notification', handleNotification);
+      socket.off('new-notification', handleNotification);
     };
   }, []);
 
+  const getNotifications = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      const response = await axios.get('https://wish-me-65k8.onrender.com/api/v1/comments/abc/cde/notifications');
+
+      console.log(response.data.data);
+      setNotifications(response.data.data);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  };
+
+  useEffect(() => {
+    getNotifications();
+  }, []);
   return (
     <>
     <Sidebar/>
