@@ -35,7 +35,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
     const fetchComments = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:7000/api/v1/comments/${postId}`);
+        const response = await axios.get(`https://wish-me-65k8.onrender.com/api/v1/comments/${postId}`);
         setComments(response.data.data);
         setTotalComments(response.data.data.length);
       } catch (error) {
@@ -93,7 +93,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
 
     try {
       axios.defaults.withCredentials = true;
-      const response = await axios.post("http://localhost:7000/api/v1/comments", {
+      const response = await axios.post("https://wish-me-65k8.onrender.com/api/v1/comments", {
         text: comment,
         postId,
         createdBy: user._id,
@@ -119,7 +119,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
 
     try {
       axios.defaults.withCredentials = true;
-      const response = await axios.post("http://localhost:7000/api/v1/comments", {
+      const response = await axios.post("https://wish-me-65k8.onrender.com/api/v1/comments", {
         text: replyText,
         postId,
         createdBy: user._id,
@@ -141,7 +141,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId }) => {
 
   const handleDeleteComment = async (commentId: string) => {
     try {
-      await axios.delete(`http://localhost:7000/api/v1/comments/${commentId}`);
+      await axios.delete(`https://wish-me-65k8.onrender.com/api/v1/comments/${commentId}`);
       socket.emit("deleteComment", commentId);
     } catch (error) {
       toast.error("Error deleting comment.");

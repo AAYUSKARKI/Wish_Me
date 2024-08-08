@@ -25,7 +25,7 @@ const BuyerDashboard = () => {
     const getPosts = async () => {
       axios.defaults.withCredentials = true;
       try {
-        const response = await axios.get("http://localhost:7000/api/v1/requests/posts/requests/myposts");
+        const response = await axios.get("https://wish-me-65k8.onrender.com/api/v1/requests/posts/requests/myposts");
         setPosts(response.data.data);
       } catch (error) {
         console.error("Failed to fetch posts", error);

@@ -39,7 +39,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:7000/api/v1/requests");
+        const response = await axios.get("https://wish-me-65k8.onrender.com/api/v1/requests");
         setPosts(response.data.data);
       } catch (err) {
         setError("Failed to fetch posts");
@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
     const fetchMyCategoryPosts = async () => {
       try {
         axios.defaults.withCredentials = true;
-        const response = await axios.get("http://localhost:7000/api/v1/requests/myposts/myposts");
+        const response = await axios.get("https://wish-me-65k8.onrender.com/api/v1/requests/myposts/myposts");
         setMyCategoryPosts(response.data.data);
       } catch (err) {
         setError("Failed to fetch category posts");
