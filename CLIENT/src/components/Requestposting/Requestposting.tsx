@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useState, useEffect, ChangeEvent } from "react";
-// import { IoArrowBack } from "react-icons/io5";
 import Sidebar from "../Sidebar/Sidebar";
-import toast from "react-hot-toast"; // Assuming you are using react-hot-toast for notifications
+import toast from "react-hot-toast";
 
 interface Request {
   content: string;
@@ -129,116 +128,107 @@ const CreateRequest: React.FC = () => {
   };
 
   return (
-    <div className="flex relative h-screen dark:bg-gray-950">
-      <Sidebar/>
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ml-3 w-3/4 p-4 border border-gray-300 rounded-xl shadow-2xl bg-blue-600 dark:bg-gray-950 dark:border-gray-800">
-      <div className="flex justify-between items-center mb-4">
-        {/* <IoArrowBack className="text-3xl cursor-pointer text-gray-700 dark:text-gray-300" /> */}
-        <p className="text-sm lg:text-5xl md:text-3xl font-bold text-black dark:text-white p-2">Create Request For Products</p>
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"
-          disabled={loading}
-        >
-          Request
-        </button>
-      </div>
-      <div className="relative flex flex-col items-center justify-center bg-blue-400 dark:bg-gray-800 p-4 rounded-lg">
-        <div className="flex justify-start w-full">
+    <div className="flex h-screen dark:bg-gray-950">
+      <Sidebar />
+      <div className="w-full lg:w-2/3 mx-auto mt-[75px] p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+        <div className="flex items-center mb-4">
           <img
             src={user?.avatar}
             alt="Profile"
             className="w-12 h-12 rounded-full object-cover"
           />
-          <p className="text-2xl text-black dark:text-white p-2">{user?.username}</p>
+          <p className="ml-4 text-lg font-semibold text-gray-700 dark:text-white">{user?.username}</p>
         </div>
         <textarea
-          className="w-full h-[200px] p-2 shadow-2xl rounded-lg mb-4 bg-white dark:bg-gray-700 dark:text-white"
+          className="w-full h-[9rem] p-4 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg border border-gray-300 dark:border-gray-600 resize-none"
           value={request.content}
           onChange={(e) => setRequest({ ...request, content: e.target.value })}
           placeholder="What do you want?"
         ></textarea>
         {request.mediaPreview && (
-          <div className="relative w-full mb-4">
+          <div className="relative mt-4">
             <img
               src={request.mediaPreview}
               alt="Selected media"
-              className="w-full max-h-48 object-contain rounded-lg shadow-xl"
+              className="w-full max-h-60 object-contain rounded-lg shadow-lg"
             />
             <button
               onClick={handleRemoveImage}
-              className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 shadow-md hover:bg-red-600"
+              className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
             >
               &times;
             </button>
           </div>
         )}
-        <label className="w-full flex items-center justify-center bg-white dark:bg-gray-700 dark:text-white p-2 rounded-lg shadow-2xl cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600">
-          <span className="text-gray-700 dark:text-gray-300">Upload Media</span>
-          <input
-            type="file"
-            className="hidden"
-            onChange={handleMediaChange}
-            accept="image/*"
-          />
-        </label>
-        <div className="flex flex-col w-full mt-4">
-          <label className="text-gray-700 dark:text-gray-300" htmlFor="category">
-            Enter your product Categories
-          </label>
-          <div className="flex items-center mt-2">
+        <div className="mt-4 flex flex-col sm:flex-row sm:items-center">
+          <label className="cursor-pointer flex items-center bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600">
+            <span>Upload Media</span>
             <input
-              type="text"
-              name="category"
-              id="category"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
-              value={categoryInput}
-              onChange={handleCategoryInputChange}
-              disabled={loading}
+              type="file"
+              className="hidden"
+              onChange={handleMediaChange}
+              accept="image/*"
             />
-            <button
-              type="button"
-              className="ml-2 py-2 px-4 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
-              onClick={() => handleAddCategory(categoryInput)}
-              disabled={loading || !availableCategories.includes(categoryInput.trim())}
-            >
-              Add
-            </button>
-          </div>
-          {categoryNotAvailable && (
-            <p className="text-red-500 mt-2 text-sm dark:text-red-400">{categoryInput} Category not available</p>
-          )}
-          {suggestions.length > 0 && (
-            <div className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-md mt-2 w-full max-h-40 overflow-auto">
-              {suggestions.map((suggestion, index) => (
-                <div
-                  key={index}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
-                  onClick={() => handleAddCategory(suggestion)}
-                >
-                  {suggestion}
+          </label>
+          <div className="mt-4 sm:mt-0 sm:ml-4 w-full">
+            <label className="text-gray-700 dark:text-gray-300" htmlFor="category">
+              Product Categories
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                name="category"
+                id="category"
+                className="w-full mt-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-white"
+                value={categoryInput}
+                onChange={handleCategoryInputChange}
+                disabled={loading}
+                placeholder="Enter or select categories"
+              />
+              {categoryNotAvailable && (
+                <p className="text-red-500 mt-2 text-sm dark:text-red-400">{categoryInput} Category not available</p>
+              )}
+              {suggestions.length > 0 && (
+                <div className="absolute top-full left-0 w-full mt-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-md max-h-40 overflow-auto z-10">
+                  {suggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600"
+                      onClick={() => handleAddCategory(suggestion)}
+                    >
+                      {suggestion}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-          <div className="mt-2 flex flex-wrap gap-2">
-            {request.category.map((category, index) => (
-              <div key={index} className="flex items-center bg-indigo-200 dark:bg-indigo-600 text-indigo-800 dark:text-white px-2 py-1 rounded-full">
-                <span>{category}</span>
-                <button
-                  type="button"
-                  className="ml-2 text-red-600 dark:text-red-400"
-                  onClick={() => handleRemoveCategory(category)}
-                  disabled={loading}
-                >
-                  &times;
-                </button>
-              </div>
-            ))}
           </div>
         </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {request.category.map((category, index) => (
+            <div key={index} className="flex items-center bg-indigo-200 dark:bg-indigo-600 text-indigo-800 dark:text-white px-2 py-1 rounded-full">
+              <span>{category}</span>
+              <button
+                type="button"
+                className="ml-2 text-red-600 dark:text-red-400"
+                onClick={() => handleRemoveCategory(category)}
+                disabled={loading}
+              >
+                &times;
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={handleSubmit}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"
+            disabled={loading}
+          >
+            Post Request
+          </button>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

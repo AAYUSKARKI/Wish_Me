@@ -31,9 +31,9 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className='flex'>
+    <div className='dark:bg-gray-950 dark:text-white'>
       <Sidebar/>
-    <div className="w-450px md:w-[890px] mx-auto p-6 bg-slate-50 rounded-2xl shadow-3xl">
+    <div className="w-450px md:w-[890px] mt-[75px] mx-auto p-6 bg-slate-50 rounded-2xl shadow-3xl">
       <h2 className="text-2xl font-bold mb-4 text-center">Profile</h2>
       {editMode ? (
         <form onSubmit={handleSubmit}>

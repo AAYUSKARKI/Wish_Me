@@ -20,6 +20,22 @@ const passwordRequirements = [
     { regex: /[@$!%*?&]/, message: "Password must contain at least one special character" },
 ];
 
+const generateDefaultAvatar = (username: string): string => {
+    const firstLetter = username.charAt(0).toUpperCase();
+    const color = `#${Math.floor(Math.random() * 16777215).toString(16)}`; // Random color
+
+    // SVG string for the avatar
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150">
+            <circle cx="75" cy="75" r="75" fill="${color}" />
+            <text x="50%" y="50%" font-size="60" text-anchor="middle" dy=".3em" fill="#fff">${firstLetter}</text>
+        </svg>
+    `;
+
+    // Encode SVG string as a data URL
+    return `data:image/svg+xml;base64,${btoa(svg)}`;
+};
+
 function Signup() {
     const navigate = useNavigate();
     const [user, setUser] = useState<User>({
@@ -39,9 +55,11 @@ function Signup() {
     const [avatarError, setAvatarError] = useState<string>("");
 
     useEffect(() => {
-        setError('');
-        setAvatarError('');
-    }, [user, avatar]);
+        if (user.username) {
+            // Update the default avatar only if the username changes
+            setAvatarPreview(avatar ? URL.createObjectURL(avatar) : generateDefaultAvatar(user.username));
+        }
+    }, [user.username, avatar]);
 
     const handleSeller = () => {
         setBuyer(false);
@@ -61,11 +79,7 @@ function Signup() {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             setAvatar(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setAvatarPreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            setAvatarPreview(URL.createObjectURL(file));
         }
     };
 
@@ -101,12 +115,6 @@ function Signup() {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!avatar) {
-            toast.error("Please select an avatar");
-            setAvatarError("Please select an avatar");
-            return;
-        }
-
         if (!emailRegex.test(user.email)) {
             toast.error("Please enter a valid email address");
             return;
@@ -126,9 +134,18 @@ function Signup() {
 
         try {
             setError("");
+            setAvatarError("");
             setLoading(true);
             const formData = new FormData();
-            if (avatar) formData.append("avatar", avatar);
+            if (avatar) {
+                formData.append("avatar", avatar);
+            } else {
+                // Convert the default avatar to a binary format
+                const defaultAvatarData = generateDefaultAvatar(user.username);
+                const response = await fetch(defaultAvatarData);
+                const blob = await response.blob();
+                formData.append("avatar", blob, "default-avatar.svg");
+            }
             formData.append("email", user.email);
             formData.append("username", user.username);
             formData.append("password", user.password);
@@ -168,7 +185,7 @@ function Signup() {
                         Sign Up As A Buyer
                     </h1>
                 </div>
-                <h1 className="text-xl md:text-3xl md:font-bold text-gray-800 mt-16 mb-6">You are signing as a {user.role}</h1>
+                <h1 className="text-xl md:text-3xl md:font-bold text-gray-800 mt-16 mb-6">You are signing up as a {user.role}</h1>
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     <div className="flex flex-col items-center">
                         <label htmlFor="avatar" className="cursor-pointer flex flex-col items-center">
@@ -176,7 +193,11 @@ function Signup() {
                             <span className="text-gray-500">Upload Avatar</span>
                         </label>
                         <input type="file" name="avatar" id="avatar" className="hidden" onChange={handleAvatar} />
-                        {avatarPreview && <img src={avatarPreview} alt="Avatar Preview" className="w-24 h-24 rounded-full object-cover mt-4" />}
+                        {avatarPreview ? (
+                            <img src={avatarPreview} alt="Avatar Preview" className="w-24 h-24 rounded-full object-cover mt-4" />
+                        ) : (
+                            <img src={generateDefaultAvatar(user.username)} alt="Default Avatar Preview" className="w-24 h-24 rounded-full object-cover mt-4" />
+                        )}
                         {avatarError && <p className="text-red-500">{avatarError}</p>}
                     </div>
                     <div className="flex flex-col">
@@ -216,33 +237,42 @@ function Signup() {
                         />
                         {error && <p className="text-red-500">{error}</p>}
                     </div>
-                    {!buyer && (
+                    {user.role === "seller" && (
                         <div className="flex flex-col">
-                            <label className="text-gray-700 dark:text-white" htmlFor="sellerCategory">Seller Category</label>
-                            <div className="flex gap-2">
+                            <label className="text-gray-700 dark:text-white" htmlFor="categories">Seller Categories</label>
+                            <div className="flex items-center gap-2">
                                 <input
                                     type="text"
-                                    id="sellerCategory"
+                                    name="categoryInput"
+                                    id="categoryInput"
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                                     value={categoryInput}
                                     onChange={(e) => setCategoryInput(e.target.value)}
+                                    placeholder="Add category"
                                 />
-                                <button type="button" className="px-4 py-2 bg-green-500 text-white rounded-md" onClick={handleAddCategory}>Add</button>
+                                <button type="button" onClick={handleAddCategory} className="bg-green-500 text-white px-4 py-2 rounded-md">Add</button>
                             </div>
                             <div className="flex flex-wrap gap-2 mt-2">
                                 {user.sellerCategory.map((category) => (
-                                    <span key={category} className="px-4 py-1 bg-green-200 text-green-700 rounded-md cursor-pointer" onClick={() => handleRemoveCategory(category)}>{category}</span>
+                                    <span key={category} className="bg-gray-200 text-gray-700 px-2 py-1 rounded-md flex items-center gap-2">
+                                        {category}
+                                        <button type="button" onClick={() => handleRemoveCategory(category)} className="text-red-500">x</button>
+                                    </span>
                                 ))}
                             </div>
                         </div>
                     )}
-                    <button type="submit" className="w-full px-4 py-2 bg-green-500 text-white rounded-md shadow-sm focus:outline-none focus:ring focus:ring-green-500" disabled={loading}>
-                        {loading ? "Signing Up..." : "Sign Up"}
+                    <button
+                        type="submit"
+                        className="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-500"
+                        disabled={loading}
+                    >
+                        {loading ? "Submitting..." : "Sign Up"}
                     </button>
                 </form>
-                <div className="flex justify-between mt-4">
-                    <Link to="/login" className="text-green-500">Already have an account? Login</Link>
-                </div>
+                <p className="text-gray-700 dark:text-gray-400 mt-4">
+                    Already have an account? <Link to="/login" className="text-green-500">Log in</Link>
+                </p>
             </div>
         </div>
     );
